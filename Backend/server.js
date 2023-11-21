@@ -19,7 +19,7 @@ app.use(cookies());
 app.use(userRouter);
 app.use(verifyJWT);
 app.get('/', (req, res) => {
-    res.send('Hello World, ' + req.id)
+    res.send('Hello World, ' + req.username)
 });
 
 const PORT = process.env.PORT || 5000;
