@@ -1,6 +1,6 @@
 import LoginForm from "../components/loginForm.jsx";
 
-function App() {
+function Login() {
   return (
     <div>
       <LoginForm />
