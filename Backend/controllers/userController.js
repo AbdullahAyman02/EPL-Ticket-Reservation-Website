@@ -158,6 +158,69 @@ const handleLogout = async (req, res) => {
   res.sendStatus(204);
 };
 
+const getUserbyUsername = async (req, res) => {
+  const username = req.params.username;
+  try {
+    const user = await User.findOne({
+      attributes: ['username', 'first_name', 'last_name', 'birthday', 'gender', 'city', 'address', 'email'],
+      where: {
+        username: username,
+      },
+    });
+    res.status(200).json({
+      status: "success",
+      user: user,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      status: "fail",
+      message: err,
+    });   
+  }
+}; 
+
+const handleEdit = async (req, res) => {
+  const {
+    username,
+    password,
+    first_name,
+    last_name,
+    birthday,
+    gender,
+    city,
+    address,
+  } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    let user = await User.update({
+      password: hashedPassword,
+      first_name,
+      last_name,
+      birthday,
+      gender,
+      city,
+      address,
+    }, {
+      where: {
+        username: username,
+      },
+    });
+    res.status(201).json({
+      status: "success",
+      user: user,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      status: "fail",
+      message: err,
+    });
+  }
+};
+
 const handleRefresh = async (req, res) => {
   //1. Retrieve Refresh Token from Client
   const cookies = req.cookies;
@@ -237,6 +300,61 @@ const SendEmail = async (req, res) => {
   });
 };
 
+const UpgradeUser = async (req, res) => {
+  const { username } = req.body;
+
+  try {
+    const user = await User.findOne({ where: { username: username } });
+
+    if (!user) {
+      return res.status(404).json({
+        status: "Not Found",
+        message: "User does not exist",
+      });
+    }
+
+    user.role = 'M';
+    user.save();
+
+    res.status(200).json({
+      status: "success",
+      message: "User successfully upgraded",
+    });
+  } catch (err) {
+    res.status(401).json({
+      status: "fail",
+      message: err,
+    });
+  }
+}
+
+const deleteUser = async (req, res) => {
+  const { username } = req.body;
+
+  try {
+    const user = await User.findOne({ where: { username: username } });
+
+    if (!user) {
+      return res.status(404).json({
+        status: "Not Found",
+        message: "User does not exist",
+      });
+    }
+
+    user.destroy();
+
+    res.status(200).json({
+      status: "success",
+      message: "User successfully deleted",
+    });
+  } catch (err) {
+    res.status(401).json({
+      status: "fail",
+      message: err,
+    });
+  }
+}
+
 const handleVerify = async (req, res) => {
   const { token } = req.params;
 
@@ -307,4 +425,4 @@ const handleVerify = async (req, res) => {
   }
 };
 
-export { handleSignup, handleLogin, handleLogout, handleRefresh, handleVerify };
+export { handleSignup, handleLogin, handleLogout, getUserbyUsername, handleEdit, handleRefresh, UpgradeUser, deleteUser, handleVerify };
