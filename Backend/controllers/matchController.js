@@ -36,36 +36,37 @@ const addMatch = async (req, res) => {
 const getMatches = async (req, res) => {
   try {
     const match = await Match.findAll({
+      attributes: ['id', 'hometeam.name', 'awayteam.name', 'stadium.name', 'date', 'referee.name', 'linesman1.name', 'linesman2.name'],
       include: [
         {
           model: Team,
           as: 'hometeam',
-          attributes: ['name'],
+          attributes: ['id', 'name'],
         },
         {
           model: Team,
           as: 'awayteam',
-          attributes: ['name'],
+          attributes: ['id', 'name'],
         },
         {
           model: Stadium,
           as: 'stadium',
-          attributes: ['name'],
+          attributes: ['id', 'name'],
         },
         {
           model: Referee,
           as: 'referee',
-          attributes: ['name'],
+          attributes: ['id', 'name'],
         },
         {
           model: Referee,
           as: 'linesman1',
-          attributes: ['name'],
+          attributes: ['id', 'name'],
         },
         {
           model: Referee,
           as: 'linesman2',
-          attributes: ['name'],
+          attributes: ['id', 'name'],
         },
       ],
     });
