@@ -1,14 +1,16 @@
 import { Route, Router } from "express";
 import {
     addMatch,
-    getMatch,
+    getMatches,
+    getMatchById,
     editMatch
 } from "../controllers/matchController.js";
 
 const matchRouter = Router();
 
 matchRouter.post("/addMatch", addMatch);
-matchRouter.get("/getMatch", getMatch);
+matchRouter.get("/getMatches", getMatches);
+matchRouter.get("/getMatchById/:id", getMatchById);
 matchRouter.put("/editMatch", editMatch);
 
 export default matchRouter;

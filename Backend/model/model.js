@@ -238,15 +238,15 @@ Match.hasMany(Ticket, { foreignKey: "match_id" });
 Match.belongsTo(Stadium, { foreignKey: "stadium_id" });
 
 //match and referee, one to one
-Match.belongsTo(Referee, { foreignKey: "referee_id" });
-Match.belongsTo(Referee, { foreignKey: "linesman_1" });
-Match.belongsTo(Referee, { foreignKey: "linesman_2" });
+Match.belongsTo(Referee, { as: 'referee', foreignKey: "referee_id" });
+Match.belongsTo(Referee, { as: 'linesman1', foreignKey: "linesman_1" });
+Match.belongsTo(Referee, { as: 'linesman2', foreignKey: "linesman_2" });
 
 //match and team, one to many
-Match.belongsTo(Team, { foreignKey: "home_team" });
+Match.belongsTo(Team, { as: 'hometeam', foreignKey: "home_team" });
 
 //match and team, one to many
-Match.belongsTo(Team, { foreignKey: "away_team" });
+Match.belongsTo(Team, { as: 'awayteam', foreignKey: "away_team" });
 
 //team and stadium, one to one
 // Team.belongsTo(Stadium, { foreignKey: "stadium_id" });

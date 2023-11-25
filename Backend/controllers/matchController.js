@@ -1,4 +1,4 @@
-import { Match } from "../model/model.js";
+import { Match, Team, Stadium, Referee } from "../model/model.js";
 
 const addMatch = async (req, res) => {
   const {
@@ -33,9 +33,42 @@ const addMatch = async (req, res) => {
   }
 };
 
-const getMatch = async (req, res) => {
+const getMatches = async (req, res) => {
   try {
-    const match = await Match.findAll();
+    const match = await Match.findAll({
+      include: [
+        {
+          model: Team,
+          as: 'hometeam',
+          attributes: ['name'],
+        },
+        {
+          model: Team,
+          as: 'awayteam',
+          attributes: ['name'],
+        },
+        {
+          model: Stadium,
+          as: 'stadium',
+          attributes: ['name'],
+        },
+        {
+          model: Referee,
+          as: 'referee',
+          attributes: ['name'],
+        },
+        {
+          model: Referee,
+          as: 'linesman1',
+          attributes: ['name'],
+        },
+        {
+          model: Referee,
+          as: 'linesman2',
+          attributes: ['name'],
+        },
+      ],
+    });
     res.status(200).json({
       status: "success",
       match: match,
@@ -48,6 +81,28 @@ const getMatch = async (req, res) => {
     });
   }
 }
+
+const getMatchById = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const match = await Match.findOne({
+        where: {
+            id: id,
+        }
+        });
+        res.status(200).json({
+        status: "success",
+        match: match,
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+        status: "fail",
+        message: err,
+        });
+    }
+};
+
 
 const editMatch = async (req, res) => {
   const {
@@ -87,4 +142,4 @@ const editMatch = async (req, res) => {
   }
 }
 
-export { addMatch, getMatch, editMatch };
+export { addMatch, getMatches, getMatchById, editMatch };
