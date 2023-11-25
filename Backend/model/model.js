@@ -5,15 +5,16 @@ const User = db.define(
   "user",
   {
     // attributes
-    id: {
-      type: Sequelize.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
+    // id: {
+      // type: Sequelize.INTEGER,
+      // autoIncrement: true,
+      // primaryKey: true,
+    // },
     username: {
       type: Sequelize.STRING,
       allowNull: false,
       unique: true,
+      primaryKey: true
     },
     password: {
       type: Sequelize.STRING,
@@ -28,7 +29,7 @@ const User = db.define(
       allowNull: false,
     },
     birthday: {
-      type: Sequelize.DATE,
+      type: Sequelize.DATEONLY,
       allowNull: false,
     },
     gender: {
@@ -52,14 +53,14 @@ const User = db.define(
       type: Sequelize.CHAR,
       allowNull: false,
     },
-    // refresh_token: {
-    //   type: Sequelize.TEXT,
-    //   allowNull: true,
-    // },
-    // is_verified: {
-    //   type: Sequelize.BOOLEAN,
-    //   allowNull: false,
-    // },
+    refresh_token: {
+      type: Sequelize.TEXT,
+      allowNull: true,
+    },
+    is_verified: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+    },
   },
   {
     createdAt: false,
@@ -97,11 +98,11 @@ const Match = db.define(
       allowNull: false,
     },
     linesman_1: {
-      type: Sequelize.STRING,
+      type: Sequelize.INTEGER,
       allowNull: false,
     },
     linesman_2: {
-      type: Sequelize.STRING,
+      type: Sequelize.INTEGER,
       allowNull: false,
     },
   },
@@ -123,15 +124,19 @@ const Stadium = db.define(
       type: Sequelize.STRING,
       allowNull: false,
     },
-    team: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-    capacity: {
+    // team_id: {
+    //   type: Sequelize.INTEGER,
+    //   allowNull: true,          
+    // },
+    no_of_rows: {
       type: Sequelize.INTEGER,
       allowNull: false,
     },
+    seats_per_row: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
     },
+  },
   {
     createdAt: false,
     updatedAt: false,
@@ -150,14 +155,10 @@ const Team = db.define(
       type: Sequelize.STRING,
       allowNull: false,
     },
-    stadium_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-    },
-    founded: {
-      type: Sequelize.DATE,
-      allowNull: false,
-    },
+    // founded: {
+    //   type: Sequelize.DATE,
+    //   allowNull: false,
+    // },
   },
   {
     createdAt: false,
@@ -177,10 +178,10 @@ const Referee = db.define(
       type: Sequelize.STRING,
       allowNull: false,
     },
-    age: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-    },
+    // age: {
+    //   type: Sequelize.INTEGER,
+    //   allowNull: false,
+    // },
   },
   {
     createdAt: false,
@@ -191,21 +192,28 @@ const Referee = db.define(
 const Ticket = db.define(
   "ticket",
   {
-    id: {
-      type: Sequelize.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
+    // id: {
+    //   type: Sequelize.INTEGER,
+    //   autoIncrement: true,
+    //   primaryKey: true,
+    // },
     ticket_no: {
       type: Sequelize.INTEGER,
       allowNull: false,
+      unique: true,
     },
     match_id: {
       type: Sequelize.INTEGER,
       allowNull: false,
+      primaryKey: true,
     },
-    user_id: {
+    seat_no: {
       type: Sequelize.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+    },
+    username: {
+      type: Sequelize.STRING,
       allowNull: false,
     },
   },
@@ -216,8 +224,12 @@ const Ticket = db.define(
 );
 
 //Relationships
+
+//stadium and team, one to one    TO BE CLARIFIED LATER
+// Stadium.hasOne(Team, { foreignKey: "team_id" });
+
 //user and tickets, one to many
-User.hasMany(Ticket, { foreignKey: "user_id" });
+User.hasMany(Ticket, { foreignKey: "username" });
 
 //match and tickets, one to many
 Match.hasMany(Ticket, { foreignKey: "match_id" });
@@ -227,6 +239,8 @@ Match.belongsTo(Stadium, { foreignKey: "stadium_id" });
 
 //match and referee, one to one
 Match.belongsTo(Referee, { foreignKey: "referee_id" });
+Match.belongsTo(Referee, { foreignKey: "linesman_1" });
+Match.belongsTo(Referee, { foreignKey: "linesman_2" });
 
 //match and team, one to many
 Match.belongsTo(Team, { foreignKey: "home_team" });
@@ -235,10 +249,7 @@ Match.belongsTo(Team, { foreignKey: "home_team" });
 Match.belongsTo(Team, { foreignKey: "away_team" });
 
 //team and stadium, one to one
-Team.belongsTo(Stadium, { foreignKey: "stadium_id" });
-
-//match and tickets, one to many
-Match.hasMany(Ticket, { foreignKey: "match_id" });
+// Team.belongsTo(Stadium, { foreignKey: "stadium_id" });
 
 // db.sync({ force: true }).then(() => {
 //     console.log(`Database & tables created!`)

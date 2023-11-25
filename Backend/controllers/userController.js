@@ -7,24 +7,41 @@ import nodemailer from "nodemailer";
 dotenv.config();
 
 const handleSignup = async (req, res) => {
-  const { email, password, display_name } = req.body;
+  const {
+    username,
+    password,
+    first_name,
+    last_name,
+    birthday,
+    gender,
+    city,
+    address,
+    email,
+  } = req.body;
 
-  //All fields are required
-  if (!email || !password || !display_name) {
-    return res.status(400).json({
-      status: "Bad Request",
-      message: "Email, password and display_name are required",
-    });
-  }
+  // //All fields are required
+  // if (!email || !password || !display_name) {
+  //   return res.status(400).json({
+  //     status: "Bad Request",
+  //     message: "Email, password and display_name are required",
+  //   });
+  // }
 
   try {
     //Encrypt the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     let user = await User.create({
-      email,
+      username,
       password: hashedPassword,
-      display_name,
+      first_name,
+      last_name,
+      birthday,
+      gender,
+      city,
+      address,
+      email,
+      role: 'F',
       refresh_token: null,
       is_verified: false,
     });
@@ -33,8 +50,7 @@ const handleSignup = async (req, res) => {
 
     res.status(201).json({
       status: "success",
-      email: user.email,
-      display_name: user.display_name,
+      username: user.username,    
     });
   } catch (err) {
     res.status(500).json({
@@ -45,16 +61,16 @@ const handleSignup = async (req, res) => {
 };
 
 const handleLogin = async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({
-      status: "Bad Request",
-      message: "Email and password are required",
-    });
-  }
+  // if (!email || !password) {
+  //   return res.status(400).json({
+  //     status: "Bad Request",
+  //     message: "Email and password are required",
+  //   });
+  // }
   try {
-    const userData = await User.findOne({ where: { email: email } });
+    const userData = await User.findOne({ where: { username: username } });
 
     if (!userData) {
       return res.status(404).json({
@@ -80,7 +96,7 @@ const handleLogin = async (req, res) => {
 
     const accessToken = jwt.sign(
       {
-        id: userData.id,
+        username: userData.username,
       },
       process.env.ACCESS_TOKEN_SECRET,
       {
@@ -89,7 +105,7 @@ const handleLogin = async (req, res) => {
     );
 
     const refreshToken = jwt.sign(
-      { email: userData.email },
+      { username: userData.username },
       process.env.REFRESH_TOKEN_SECRET,
       {
         expiresIn: "1d",
@@ -111,8 +127,7 @@ const handleLogin = async (req, res) => {
       status: "Success",
       data: {
         accessToken,
-        email: userData.email,
-        display_name: userData.display_name,
+        username: userData.username,
       },
     });
   } catch (err) {
@@ -131,6 +146,7 @@ const handleLogout = async (req, res) => {
   const foundUser = await User.findOne({
     where: { refresh_token: refreshToken },
   });
+  console.log(foundUser);
   res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
   if (!foundUser) {
     return res.sendStatus(204);
@@ -156,12 +172,12 @@ const handleRefresh = async (req, res) => {
 
   //2. Check Validity and Generate new Access Token
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
-    if (err || decoded.email !== foundUser.email) return res.sendStatus(403);
+    if (err || decoded.username !== foundUser.username) return res.sendStatus(403);
   });
 
   const accessToken = jwt.sign(
     {
-      id: foundUser.id,
+      username: foundUser.username,
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
@@ -172,10 +188,7 @@ const handleRefresh = async (req, res) => {
   res.status(200).json({
     status: "success",
     data: {
-      name: foundUser.display_name,
       accessToken,
-      email: foundUser.email,
-      display_name: foundUser.display_name,
     },
   });
 };
@@ -194,7 +207,7 @@ const SendEmail = async (req, res) => {
 
   const token = jwt.sign(
     {
-      email: req.body.email,
+      username: req.body.username,
     },
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: "10m" }
@@ -213,7 +226,7 @@ const SendEmail = async (req, res) => {
     text: `Hi! There, You have recently visited 
           our website and entered your email.
           Please follow the given link to verify your email
-          http://localhost:5000/verify/${token} 
+          http://localhost:${process.env.PORT}/verify/${token} 
           Thanks`,
   };
 
@@ -237,7 +250,7 @@ const handleVerify = async (req, res) => {
   try {
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
-    const user = await User.findOne({ where: { email: decoded.email } });
+    const user = await User.findOne({ where: { username: decoded.username } });
 
     if (!user) {
       return res.status(404).json({
@@ -248,7 +261,7 @@ const handleVerify = async (req, res) => {
 
     // Email included in refresh token payload to check associativity when used again
     const refreshToken = jwt.sign(
-      { email: decoded.email },
+      { username: decoded.username },
       process.env.REFRESH_TOKEN_SECRET,
       {
         expiresIn: "1d",
@@ -258,7 +271,7 @@ const handleVerify = async (req, res) => {
     console.log(user);
     const accessToken = jwt.sign(
       {
-        id: user.id,
+        username: user.username,
       },
       process.env.ACCESS_TOKEN_SECRET,
       {
@@ -283,8 +296,7 @@ const handleVerify = async (req, res) => {
       message: "User successfully verified",
       data: {
         accessToken,
-        email: user.email,
-        display_name: user.display_name,
+        username: user.username,
       },
     });
   } catch (err) {
