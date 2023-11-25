@@ -2,9 +2,10 @@ import AhlyLogo from "../assets/Ahly.png";
 import ZamalekLogo from "../assets/Zamalek.png";
 
 // eslint-disable-next-line react/prop-types
-const MatchSlot = ({ team1, team2 }) => {
+const MatchSlot = ({ team1, team2, date, stadium }) => {
+  const matchDate = new Date(date);
   return (
-    <div className="py-2 m-3">
+    <div className="py-2 m-3 hover:shadow-xl">
       <div className="teams bg-white text-black flex align-middle justify-around rounded-t-md font-bold py-2">
         <div>
           <img src={AhlyLogo} alt="" />
@@ -17,8 +18,8 @@ const MatchSlot = ({ team1, team2 }) => {
         </div>
       </div>
       <div className="bg-blue-900 flex justify-between p-1 rounded-b-md text-sm">
-        <p className="p-1">Match Time: 12:00</p>
-        <p className="p-1">Stadium: Cairo International Stadium</p>
+        <p className="p-1">{matchDate.toDateString()}</p>
+        <p className="p-1">@ {stadium}</p>
         <button className="text-white p-1 rounded-md">Reserve</button>
       </div>
     </div>

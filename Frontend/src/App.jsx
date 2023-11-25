@@ -3,7 +3,7 @@
 // import viteLogo from "/vite.svg";
 import MatchSchedule from "./components/MatchSchedule";
 import Navbar from "./components/Navbar";
-import Login from "./pages/Login";
+// import Login from "./pages/Login";
 import scrollNavbar from "./scripts/scrollNavbar";
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
   return (
     <div onScroll={scrollNavbar}>
       <Navbar></Navbar>
-      <Login></Login>
+      {/* <Login></Login> */}
       <MatchSchedule></MatchSchedule>
     </div>
   );

@@ -7,6 +7,12 @@ import matchRouter from "./routes/match.js";
 import refereeRouter from "./routes/referee.js";
 import stadiumRouter from "./routes/stadium.js";
 import verifyJWT from './middleware/verifyJWT.js'
+import cors from 'cors'
+
+var corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200
+}
 
 dotenv.config();
 
@@ -16,6 +22,7 @@ db.authenticate()
     .catch(err => console.log('Error: ' + err))
 
 const app = express();
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookies());
