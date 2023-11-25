@@ -3,6 +3,9 @@ import db from "./model/sequelize.js";
 import dotenv from "dotenv";
 import cookies from 'cookie-parser'
 import userRouter from "./routes/user.js";
+import matchRouter from "./routes/match.js";
+import refereeRouter from "./routes/referee.js";
+import stadiumRouter from "./routes/stadium.js";
 import verifyJWT from './middleware/verifyJWT.js'
 
 dotenv.config();
@@ -17,6 +20,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookies());
 app.use(userRouter);
+app.use(matchRouter);
+app.use(refereeRouter);
+app.use(stadiumRouter);
 app.use(verifyJWT);
 app.get('/', (req, res) => {
     res.send('Hello World, ' + req.username)
