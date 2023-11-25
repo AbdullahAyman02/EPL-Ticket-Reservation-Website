@@ -9,6 +9,12 @@ import teamRouter from "./routes/team.js";
 import stadiumRouter from "./routes/stadium.js";
 import verifyJWT from './middleware/verifyJWT.js'
 import cors from 'cors'
+
+var corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200
+}
+
 dotenv.config();
 var corsOptions = {
     origin: 'http://localhost:${process.env.PORT}/verify/${token}',
