@@ -9,13 +9,14 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #123155;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+  user-select: none;
 }
 
 #root {
@@ -23,7 +24,7 @@
   height: 100vh;
   margin: 0 auto;
   text-align: center;
-  background-image: url("./assets/wallpaper.jpg");
+  /* background-image: url("./assets/wallpaper.jpg"); */
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -66,7 +67,6 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
 }

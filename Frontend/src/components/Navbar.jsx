@@ -6,7 +6,7 @@ import toggleNavbar from "../scripts/toggleNavbar";
 
 const Navbar = () => {
   return (
-    <nav className="select-none">
+    <nav id="navbar" className="top-0 w-full">
       <div className="flex flex-wrap items-center justify-between mx-auto p-2">
         <a href="#" className="flex items-center px-2">
           <img
@@ -66,7 +66,7 @@ const Navbar = () => {
               </a>
             </li>
             <li className="flex justify-center">
-              <button className="block py-2 px-4 rounded text-white">
+              <button className="block py-2 px-4 rounded text-white bg-black">
                 Logout
               </button>
             </li>
