@@ -23,9 +23,6 @@
   height: 100vh;
   margin: 0 auto;
   text-align: center;
-  /* background-image: url("./assets/wallpaper.jpg"); */
-  background-size: cover;
-  background-repeat: no-repeat;
 }
 
 .logo {
@@ -100,4 +97,26 @@ button:focus-visible {
 
 .inner {
   overflow: hidden;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge, and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+#hero {
+  background-image: url("./assets/Hero-3.jpg");
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.seat {
+  background-image: url("./assets/seat.png");
+  background-size: contain;
 }
