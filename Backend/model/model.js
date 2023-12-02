@@ -192,11 +192,6 @@ const Referee = db.define(
 const Ticket = db.define(
   "ticket",
   {
-    // id: {
-    //   type: Sequelize.INTEGER,
-    //   autoIncrement: true,
-    //   primaryKey: true,
-    // },
     ticket_no: {
       type: Sequelize.INTEGER,
       allowNull: false,

@@ -19,15 +19,33 @@ const handleSignup = async (req, res) => {
     email,
   } = req.body;
 
-  // //All fields are required
-  // if (!email || !password || !display_name) {
-  //   return res.status(400).json({
-  //     status: "Bad Request",
-  //     message: "Email, password and display_name are required",
-  //   });
-  // }
-
+  
   try {
+    // All fields are required, except address
+    if(!username || !password || !first_name || !last_name || !birthday || !gender || !city || !email) {
+      return res.status(400).json({
+        status: "Bad Request",
+        message: "All fields except address are required",
+      });
+    }
+
+    // Birthday must be in the past
+    if (new Date(birthday) > new Date()) {
+      return res.status(400).json({
+        status: "Bad Request",
+        message: "Birthday must be in the past",
+      });
+    }
+
+    // Check if username already exists
+    const is_exist = await User.findOne({ where: { username: username } });
+    if (is_exist) {
+      return res.status(400).json({
+        status: "Bad Request",
+        message: "Username already exists",
+      });
+    }
+
     //Encrypt the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -63,13 +81,14 @@ const handleSignup = async (req, res) => {
 const handleLogin = async (req, res) => {
   const { username, password } = req.body;
 
-  // if (!email || !password) {
-  //   return res.status(400).json({
-  //     status: "Bad Request",
-  //     message: "Email and password are required",
-  //   });
-  // }
   try {
+    if (!username || !password) {
+      return res.status(400).json({
+        status: "Bad Request",
+        message: "Username and password are required",
+      });
+    }
+
     const userData = await User.findOne({ where: { username: username } });
 
     if (!userData) {
@@ -193,6 +212,22 @@ const handleEdit = async (req, res) => {
   } = req.body;
 
   try {
+    // All fields are required, except address
+    if(!username || !password || !first_name || !last_name || !birthday || !gender || !city) {
+      return res.status(400).json({
+        status: "Bad Request",
+        message: "All fields except address are required",
+      });
+    }
+
+    // Birthday must be in the past
+    if (new Date(birthday) > new Date()) {
+      return res.status(400).json({
+        status: "Bad Request",
+        message: "Birthday must be in the past",
+      });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     let user = await User.update({
