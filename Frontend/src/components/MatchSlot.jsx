@@ -25,16 +25,18 @@ const MatchSlot = ({ team1_id, team2_id, team1, team2, date, stadium }) => {
           <h3>{team2}</h3>
         </div>
       </div>
-      <div className="bg-blue-900 flex justify-between p-1 rounded-b-md text-sm">
-        <p className="p-1">
+      <div className="bg-blue-900 flex p-1 rounded-b-md text-sm ">
+        <p className="p-1 flex-1 min-w-0">
           <FontAwesomeIcon className="px-2" icon={faCalendarDay} />
           {matchDate.toDateString()}
         </p>
-        <p className="p-1">
+        <p className="p-1 flex-1 min-w-0">
           <FontAwesomeIcon className="px-2" icon={faFutbol} />
           {stadium}
         </p>
-        <button className="text-white p-1 rounded-md">Reserve</button>
+        <div className="flex flex-1 min-w-0 justify-end">
+        <button className="text-white py-1 font-bold rounded-md">Reserve</button>
+        </div>
       </div>
     </div>
   );

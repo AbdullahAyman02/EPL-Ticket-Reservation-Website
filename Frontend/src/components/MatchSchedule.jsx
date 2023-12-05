@@ -14,13 +14,13 @@ const MatchSchedule = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto  max-h-[80vh] overflow-scroll no-scrollbar"> 
+    <div className="max-w-4xl mx-auto  max-h-[80vh] overflow-scroll no-scrollbar">
       {matches &&
         matches.map((match) => (
           <MatchSlot
             key={match.id}
-            team1_id={match.home_team}
-            team2_id={match.away_team}
+            team1_id={match.hometeam.id}
+            team2_id={match.awayteam.id}
             team1={match.hometeam.name}
             team2={match.awayteam.name}
             date={match.date}
