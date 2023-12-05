@@ -1,4 +1,6 @@
 import { Route, Router } from "express";
+import verifyJWT  from "../middleware/verifyJWT.js";
+
 import {
     getStadiums,
     addStadium,
@@ -6,6 +8,7 @@ import {
 
 const stadiumRouter = Router();
 
+stadiumRouter.use(verifyJWT('M'));
 stadiumRouter.get("/getStadiums", getStadiums);
 stadiumRouter.post("/addStadium", addStadium);
 

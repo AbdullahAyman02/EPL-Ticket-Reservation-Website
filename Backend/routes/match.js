@@ -1,4 +1,5 @@
 import { Route, Router } from "express";
+import verifyJWT  from "../middleware/verifyJWT.js";
 import {
     addMatch,
     getMatches,
@@ -8,9 +9,12 @@ import {
 
 const matchRouter = Router();
 
-matchRouter.post("/addMatch", addMatch);
 matchRouter.get("/getMatches", getMatches);
 matchRouter.get("/getMatchById/:id", getMatchById);
+
+matchRouter.use(verifyJWT('M'));
+
+matchRouter.post("/addMatch", addMatch);
 matchRouter.put("/editMatch", editMatch);
 
 export default matchRouter;

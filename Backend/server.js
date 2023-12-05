@@ -11,8 +11,6 @@ import ticketRouter from "./routes/ticket.js";
 import verifyJWT from './middleware/verifyJWT.js'
 import cors from 'cors'
 
-
-
 dotenv.config();
 var corsOptions = {
     origin: '*',
@@ -29,13 +27,16 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookies());
-app.use(userRouter);
-app.use(matchRouter);
-app.use(teamRouter);
-app.use(refereeRouter);
-app.use(stadiumRouter);
-app.use(ticketRouter);
-app.use(verifyJWT);
+
+app.use("/user", userRouter); //localhost:5000/user/login
+app.use("/match", matchRouter);
+
+app.use("/ticket", ticketRouter);
+
+app.use("/team", teamRouter);
+app.use("/referee", refereeRouter);
+app.use("/stadium", stadiumRouter);
+
 app.get('/', (req, res) => {
     res.send('Hello World, ' + req.username)
 });

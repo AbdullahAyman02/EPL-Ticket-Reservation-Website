@@ -18,7 +18,6 @@ const handleSignup = async (req, res) => {
     address,
     email,
   } = req.body;
-
   
   try {
     // All fields are required, except address
@@ -115,7 +114,7 @@ const handleLogin = async (req, res) => {
 
     const accessToken = jwt.sign(
       {
-        username: userData.username,
+        role: userData.role,
       },
       process.env.ACCESS_TOKEN_SECRET,
       {
@@ -143,11 +142,9 @@ const handleLogin = async (req, res) => {
     });
 
     res.status(200).json({
-      status: "Success",
-      data: {
-        accessToken,
-        username: userData.username,
-      },
+      status: "success",
+      accessToken,
+      username: userData.username,
     });
   } catch (err) {
     res.status(401).json({
@@ -275,7 +272,7 @@ const handleRefresh = async (req, res) => {
 
   const accessToken = jwt.sign(
     {
-      username: foundUser.username,
+      role: foundUser.role,
     },
     process.env.ACCESS_TOKEN_SECRET,
     {
@@ -424,7 +421,7 @@ const handleVerify = async (req, res) => {
     console.log(user);
     const accessToken = jwt.sign(
       {
-        username: user.username,
+        role: user.role,
       },
       process.env.ACCESS_TOKEN_SECRET,
       {

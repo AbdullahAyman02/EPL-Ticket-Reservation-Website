@@ -13,6 +13,7 @@ const LoginForm = () => {
         if (res.status === 200) {
           Cookies.set("token", res.data.accessToken);
           Cookies.set("username", e.target.username.value);
+          console.log(res);
         } else {
           alert(res.data.data);
         }
