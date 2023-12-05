@@ -1,7 +1,9 @@
 import Cookies from "js-cookie";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 const SignUpForm = () => {
+  const [cities, setCities] = useState([]);
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
@@ -26,6 +28,15 @@ const SignUpForm = () => {
       });
   };
 
+  useEffect(() => {
+    axios.post("https://countriesnow.space/api/v0.1/countries/cities", {
+      country: "egypt",
+    }).then((res) => {
+      setCities(res.data.data);
+    });
+  }, []);
+
+
   return (
     <div className="mt-3 w-3/12 min-w-fit">
       <form onSubmit={handleSubmit}>
@@ -35,10 +46,11 @@ const SignUpForm = () => {
             id="username"
             className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=""
+            required
           />
           <label
             htmlFor="username"
-            className="absolute left-0 text-sm text-gray-500 duration-300 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-100 peer-focus:-translate-y-7"
+            className="absolute text-sm left-0 text-gray-500 duration-300 px-2 peer-focus:text-blue-600 peer-placeholder-shown:translate-y-2 -translate-y-6 top-1 peer-focus:-translate-y-6"
           >
             Username
           </label>
@@ -49,10 +61,11 @@ const SignUpForm = () => {
             id="password"
             className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=""
+            required
           />
           <label
             htmlFor="password"
-            className="absolute left-0 text-sm text-gray-500 duration-300 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-100 peer-focus:-translate-y-7"
+            className="absolute text-sm left-0 text-gray-500 duration-300 px-2 peer-focus:text-blue-600 peer-placeholder-shown:translate-y-2 -translate-y-6 top-1 peer-focus:-translate-y-6"
           >
             Password
           </label>
@@ -64,10 +77,11 @@ const SignUpForm = () => {
               id="firstName"
               className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=""
+              required
             />
             <label
               htmlFor="firstName"
-              className="absolute left-0 text-sm text-gray-500 duration-300 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-100 peer-focus:-translate-y-7"
+              className="absolute text-sm left-0 text-gray-500 duration-300 px-2 peer-focus:text-blue-600 peer-placeholder-shown:translate-y-2 -translate-y-6 top-1 peer-focus:-translate-y-6"
             >
               First Name
             </label>
@@ -78,10 +92,11 @@ const SignUpForm = () => {
               id="lastName"
               className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=""
+              required
             />
             <label
               htmlFor="lastName"
-              className="absolute right-20 text-sm text-gray-500 duration-300 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-100 peer-focus:-translate-y-7"
+              className="absolute right-20 text-sm text-gray-500 duration-300 peer-focus:text-blue-600 peer-placeholder-shown:translate-y-2 -translate-y-6 top-1 peer-focus:-translate-y-6"
             >
               Last Name
             </label>
@@ -92,6 +107,7 @@ const SignUpForm = () => {
             type="date"
             id="birthDate"
             className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            required
           />
           <label
             htmlFor="birthDate"
@@ -108,12 +124,12 @@ const SignUpForm = () => {
             <div className="mt-6 flex justify-around">
               <div className="flex">
                 <input
-                  checked
                   id="male"
                   type="radio"
                   value="male"
                   name="default-radio"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 peer"
+                  defaultChecked = {true}
                 />
                 <label
                   htmlFor="male"
@@ -142,12 +158,12 @@ const SignUpForm = () => {
           <select
             id="countries"
             className="bg-transparent border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            required
           >
-            <option selected>Choose a city</option>
-            {/* <option value="US">United States</option>
-                    <option value="CA">Canada</option>
-                    <option value="FR">France</option>
-                    <option value="DE">Germany</option> */}
+            <option value>Choose a city</option>
+            {cities.map((city) => (
+              <option key={city} value={city}>{city}</option>
+            ))}
           </select>
         </div>
         <div className="relative mt-5">
@@ -159,7 +175,7 @@ const SignUpForm = () => {
           />
           <label
             htmlFor="address"
-            className="absolute left-0 text-sm text-gray-500 duration-300 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-100 peer-focus:-translate-y-7"
+            className="absolute text-sm left-0 text-gray-500 duration-300 px-2 peer-focus:text-blue-600 peer-placeholder-shown:translate-y-2 -translate-y-6 top-1 peer-focus:-translate-y-6"
           >
             Address
           </label>
@@ -170,10 +186,11 @@ const SignUpForm = () => {
             id="email"
             className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=""
+            required
           />
           <label
             htmlFor="email"
-            className="absolute left-0 text-sm text-gray-500 duration-300 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-100 peer-focus:-translate-y-7"
+            className="absolute text-sm left-0 text-gray-500 duration-300 px-2 peer-focus:text-blue-600 peer-placeholder-shown:translate-y-2 -translate-y-6 top-1 peer-focus:-translate-y-6"
           >
             Email Address
           </label>

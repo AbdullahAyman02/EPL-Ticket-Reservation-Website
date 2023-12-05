@@ -23,34 +23,36 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="mt-3">
+    <div className="mt-3 w-3/12 min-w-fit">
       <form onSubmit={handleSubmit}>
-        <div className="relative mt-2">
+        <div className="relative mt-5">
           <input
             type="text"
             id="username"
             name="username"
             className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=""
+            required
           />
           <label
             htmlFor="username"
-            className="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 bg-white top-2 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:bg-white peer-focus:top-2 peer-focus:scale-100 peer-focus:-translate-y-4"
+            className="absolute text-sm left-0 text-gray-500 duration-300 px-2 peer-focus:text-blue-600 peer-placeholder-shown:translate-y-2 -translate-y-6 top-1 peer-focus:-translate-y-6"
           >
             Username
           </label>
         </div>
-        <div className="relative mt-2">
+        <div className="relative mt-5">
           <input
             type="password"
             id="password"
             name="password"
             className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=""
+            required
           />
           <label
             htmlFor="password"
-            className="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 bg-white  top-2 z-10 origin-[0] px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:bg-white peer-focus:top-2 peer-focus:scale-100 peer-focus:-translate-y-4"
+            className="absolute text-sm left-0 text-gray-500 duration-300 px-2 peer-focus:text-blue-600 peer-placeholder-shown:translate-y-2 -translate-y-6 top-1 peer-focus:-translate-y-6"
           >
             Password
           </label>
