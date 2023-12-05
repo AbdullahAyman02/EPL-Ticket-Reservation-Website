@@ -115,8 +115,3 @@ button:focus-visible {
   background-repeat: no-repeat;
   background-position: center;
 }
-
-.seat {
-  background-image: url("./assets/seat.png");
-  background-size: contain;
-}
