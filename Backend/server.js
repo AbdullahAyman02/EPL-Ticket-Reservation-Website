@@ -11,18 +11,14 @@ import ticketRouter from "./routes/ticket.js";
 import verifyJWT from './middleware/verifyJWT.js'
 import cors from 'cors'
 
+
+
+dotenv.config();
 var corsOptions = {
     origin: '*',
     optionsSuccessStatus: 200
 }
 
-dotenv.config();
-var corsOptions = {
-    origin: 'http://localhost:${process.env.PORT}/verify/${token}',
-    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}
-  
-  
 // Test DB
 db.authenticate()
 .then(() => console.log('Database connected...'))
