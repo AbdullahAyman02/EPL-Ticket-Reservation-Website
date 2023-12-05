@@ -18,7 +18,6 @@ const SignUpForm = () => {
       })
       .then((res) => {
         if (res.status === "success") {
-          Cookies.set("token", res.data.token);
           Cookies.set("username", e.target.username.value);
           console.log(Cookies.get("token"));
         } else {

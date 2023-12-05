@@ -2,18 +2,16 @@ import Cookies from "js-cookie";
 import axios from "axios";
 
 const LoginForm = () => {
-  
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:20396/login", {
+      .post(`${import.meta.env.VITE_BACKEND_URL}/login`, {
         username: e.target.username.value,
         password: e.target.password.value,
       })
       .then((res) => {
-        console.log(res);
-        if (res.data.status === "Success") {
-          Cookies.set("token", res.data.data.accessToken);
+        if (res.status === 200) {
+          Cookies.set("token", res.data.accessToken);
           Cookies.set("username", e.target.username.value);
         } else {
           alert(res.data.data);

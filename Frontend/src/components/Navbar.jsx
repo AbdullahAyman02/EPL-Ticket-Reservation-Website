@@ -1,19 +1,18 @@
-// import Cookies from 'js-cookie';
 import Logo from "../assets/Logo.png";
 import toggleNavbar from "../scripts/toggleNavbar";
-
-// const cookies = new Cookies();
+import Cookies from "js-cookie";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
     <nav id="navbar" className="z-10 top-0 w-full bg-[#360137] bg-opacity-50">
-      <a href="#" className="flex items-center px-2">
+      <Link to="/" className="flex items-center px-2">
         <img
           src={Logo}
           className="absolute left-[45vw] md:left-[47vw] top-1 h-12 md:h-20 lg:h-18 logo"
           alt="EPL Logo"
         />
-      </a>
+      </Link>
       <div className="flex flex-wrap items-center justify-between mx-auto p-2">
         <button
           data-collapse-toggle="navbar-default"
@@ -43,29 +42,47 @@ const Navbar = () => {
         <div className="wrapper w-full lg:grid-rows-1" id="navbar-default">
           <ul className="inner font-medium flex flex-col w-full px-4 rounded-lg md:flex-row md:space-x-8 md:mt-0">
             <li>
-              <a href="#" className="block py-2 px-2 rounded text-white">
+              <Link to="/" className="block py-2 px-2 rounded text-white">
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="block py-2 px-2 rounded text-white">
+              <Link
+                to="/schedule"
+                className="block py-2 px-2 rounded text-white"
+              >
                 Match Schedule
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="block py-2 px-2 rounded text-white">
+              <Link
+                to="/tickets"
+                className="block py-2 px-2 rounded text-white"
+              >
                 Tickets
-              </a>
-            </li>
-            <li>
-              <a href="#" className="block py-2 px-2 rounded text-white">
-                Profile
-              </a>
+              </Link>
             </li>
             <li className="flex flex-grow justify-center md:justify-end">
-              <button className="block py-2 px-4 rounded text-white bg-black">
-                Logout
-              </button>
+              {Cookies.get("token") ? (
+                <>
+                  <Link to="/login" className="mx-4">
+                    <button className="block  py-2 px-4 rounded text-white bg-black font-bold">
+                      Login
+                    </button>
+                  </Link>
+                  <Link to="/signup">
+                    <button className="block py-2 px-4 rounded text-white bg-black font-bold">
+                      Signup
+                    </button>
+                  </Link>
+                </>
+              ) : (
+                <Link to="/login">
+                  <button className="block py-2 px-4 rounded text-white bg-black font-bold">
+                    Logout
+                  </button>
+                </Link>
+              )}
             </li>
           </ul>
         </div>
