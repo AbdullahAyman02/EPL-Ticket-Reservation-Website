@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Reservation from "./pages/Reservation";
 // import Login from "./pages/Login";
 import scrollNavbar from "./scripts/scrollNavbar";
+import SignUp from "./pages/SignUp";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <LoginForm></LoginForm>
       <Navbar></Navbar>
       <Home></Home>
+      <SignUp></SignUp>
       <Reservation></Reservation>
     </div>
   );
