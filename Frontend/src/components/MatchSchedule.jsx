@@ -6,24 +6,25 @@ const MatchSchedule = () => {
 
   useEffect(() => {
     const fetchMatches = async () => {
-      const request = await fetch("http://localhost:20396/getMatch");
+      const request = await fetch("http://localhost:20396/getMatches");
       const data = await request.json();
-      console.log(data.match);
       setMatches(data.match);
     };
     fetchMatches();
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto  max-h-[80vh] overflow-scroll no-scrollbar"> 
       {matches &&
         matches.map((match) => (
           <MatchSlot
             key={match.id}
-            team1={match.home_team}
-            team2={match.away_team}
+            team1_id={match.home_team}
+            team2_id={match.away_team}
+            team1={match.hometeam.name}
+            team2={match.awayteam.name}
             date={match.date}
-            stadium={match.stadium_id}
+            stadium={match.stadium.name}
           />
         ))}
     </div>

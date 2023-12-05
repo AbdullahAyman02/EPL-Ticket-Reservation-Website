@@ -12,6 +12,29 @@ const addMatch = async (req, res) => {
   } = req.body;
   
   try{
+    // Home team and away team must be different
+    if (home_team === away_team) {
+      res.status(400).json({
+        status: "fail",
+        message: "Home team and away team must be different",
+      });
+    }
+    // Must be 3 different referees
+    if (referee_id === linesman_1 || referee_id === linesman_2 || linesman_1 === linesman_2) {
+      res.status(400).json({
+        status: "fail",
+        message: "Must be 3 different referees",
+      });
+    }
+    // Date must be in the future
+    const today = new Date();
+    if (date < today) {
+      res.status(400).json({
+        status: "fail",
+        message: "Date must be in the future",
+      });
+    }
+
     let match = await Match.create({
       home_team,
       away_team,
@@ -36,36 +59,37 @@ const addMatch = async (req, res) => {
 const getMatches = async (req, res) => {
   try {
     const match = await Match.findAll({
+      attributes: ['id', 'hometeam.name', 'awayteam.name', 'stadium.name', 'date', 'referee.name', 'linesman1.name', 'linesman2.name'],
       include: [
         {
           model: Team,
           as: 'hometeam',
-          attributes: ['name'],
+          attributes: ['id', 'name'],
         },
         {
           model: Team,
           as: 'awayteam',
-          attributes: ['name'],
+          attributes: ['id', 'name'],
         },
         {
           model: Stadium,
           as: 'stadium',
-          attributes: ['name'],
+          attributes: ['id', 'name'],
         },
         {
           model: Referee,
           as: 'referee',
-          attributes: ['name'],
+          attributes: ['id', 'name'],
         },
         {
           model: Referee,
           as: 'linesman1',
-          attributes: ['name'],
+          attributes: ['id', 'name'],
         },
         {
           model: Referee,
           as: 'linesman2',
-          attributes: ['name'],
+          attributes: ['id', 'name'],
         },
       ],
     });
@@ -86,9 +110,42 @@ const getMatchById = async (req, res) => {
     const id = req.params.id;
     try {
         const match = await Match.findOne({
-        where: {
+          attributes: ['id'],
+          include: [
+            {
+              model: Team,
+              as: 'hometeam',
+              attributes: ['id', 'name'],
+            },
+            {
+              model: Team,
+              as: 'awayteam',
+              attributes: ['id', 'name'],
+            },
+            {
+              model: Stadium,
+              as: 'stadium',
+              attributes: ['id', 'name', 'no_of_rows', 'seats_per_row'],
+            },
+            {
+              model: Referee,
+              as: 'referee',
+              attributes: ['id', 'name'],
+            },
+            {
+              model: Referee,
+              as: 'linesman1',
+              attributes: ['id', 'name'],
+            },
+            {
+              model: Referee,
+              as: 'linesman2',
+              attributes: ['id', 'name'],
+            },
+          ],
+          where: {
             id: id,
-        }
+          }
         });
         res.status(200).json({
         status: "success",
@@ -117,6 +174,29 @@ const editMatch = async (req, res) => {
   } = req.body;
   
   try{
+    // Home team and away team must be different
+    if (home_team === away_team) {
+      res.status(400).json({
+        status: "fail",
+        message: "Home team and away team must be different",
+      });
+    }
+    // Must be 3 different referees
+    if (referee_id === linesman_1 || referee_id === linesman_2 || linesman_1 === linesman_2) {
+      res.status(400).json({
+        status: "fail",
+        message: "Must be 3 different referees",
+      });
+    }
+    // Date must be in the future
+    const today = new Date();
+    if (date < today) {
+      res.status(400).json({
+        status: "fail",
+        message: "Date must be in the future",
+      });
+    }
+    
     let match = await Match.update({
       home_team,
       away_team,

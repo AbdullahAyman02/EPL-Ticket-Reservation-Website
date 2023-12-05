@@ -7,6 +7,7 @@ import matchRouter from "./routes/match.js";
 import refereeRouter from "./routes/referee.js";
 import teamRouter from "./routes/team.js";
 import stadiumRouter from "./routes/stadium.js";
+import ticketRouter from "./routes/ticket.js";
 import verifyJWT from './middleware/verifyJWT.js'
 import cors from 'cors'
 
@@ -37,6 +38,7 @@ app.use(matchRouter);
 app.use(teamRouter);
 app.use(refereeRouter);
 app.use(stadiumRouter);
+app.use(ticketRouter);
 app.use(verifyJWT);
 app.get('/', (req, res) => {
     res.send('Hello World, ' + req.username)
