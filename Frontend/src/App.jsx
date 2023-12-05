@@ -5,6 +5,7 @@ import MatchSchedule from "./components/MatchSchedule";
 import Navbar from "./components/Navbar";
 // import Login from "./pages/Login";
 import scrollNavbar from "./scripts/scrollNavbar";
+import SignUp from "./pages/SignUp";
 
 function App() {
   //const [count, setCount] = useState(0);
@@ -13,6 +14,7 @@ function App() {
     <div onScroll={scrollNavbar}>
       <Navbar></Navbar>
       {/* <Login></Login> */}
+      <SignUp></SignUp>
       <MatchSchedule></MatchSchedule>
     </div>
   );
