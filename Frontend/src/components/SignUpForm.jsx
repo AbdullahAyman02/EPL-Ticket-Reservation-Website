@@ -5,8 +5,33 @@ import { useEffect, useState } from "react";
 // eslint-disable-next-line react/prop-types
 const SignUpForm = ({ add }) => {
   const [cities, setCities] = useState([]);
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    if (!add) {
+      console.log(Cookies.get("username"));
+      axios
+        .get(
+          `${
+            import.meta.env.VITE_BACKEND_URL
+          }/user/getUserbyUsername/${Cookies.get("username")}`
+        )
+        .then((res) => {
+          console.log(res.data.user);
+          setUser(res.data.user);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [add]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (e.target.password.value !== e.target.confirm_password.value) {
+      alert("Passwords don't match");
+      return;
+    }
     if (add) {
       axios
         .post(`${import.meta.env.VITE_BACKEND_URL}/user/signup`, {
@@ -16,7 +41,7 @@ const SignUpForm = ({ add }) => {
           lastName: e.target.lastName.value,
           birthday: e.target.birthDate.value,
           gender: e.target.gender.value,
-          city: e.target.city.value,
+          city: e.target.cities.value,
           address: e.target.address.value,
           email: e.target.email.value,
         })
@@ -35,18 +60,17 @@ const SignUpForm = ({ add }) => {
     } else {
       axios
         .put(`${import.meta.env.VITE_BACKEND_URL}/user/edit`, {
-          username: e.target.username.value,
+          username: Cookies.get("username"),
           password: e.target.password.value,
           firstName: e.target.firstName.value,
           lastName: e.target.lastName.value,
           birthday: e.target.birthDate.value,
           gender: e.target.gender.value,
-          city: e.target.city.value,
+          city: e.target.cities.value,
           address: e.target.address.value,
-          email: e.target.email.value,
         })
         .then((res) => {
-          alert(res.data.data);
+          console.log(res);
         })
         .catch((err) => {
           console.log(err);
@@ -90,13 +114,28 @@ const SignUpForm = ({ add }) => {
             id="password"
             className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=""
-            required
+            required={add}
           />
           <label
             htmlFor="password"
             className="absolute text-sm left-0 text-gray-500 duration-300 px-2 peer-focus:text-blue-600 peer-placeholder-shown:translate-y-2 -translate-y-6 top-1 peer-focus:-translate-y-6"
           >
             Password
+          </label>
+        </div>
+        <div className="relative mt-5">
+          <input
+            type="password"
+            id="confirm_password"
+            className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            placeholder=""
+            required={add}
+          />
+          <label
+            htmlFor="confirm_password"
+            className="absolute text-sm left-0 text-gray-500 duration-300 px-2 peer-focus:text-blue-600 peer-placeholder-shown:translate-y-2 -translate-y-6 top-1 peer-focus:-translate-y-6"
+          >
+            Confirm Password
           </label>
         </div>
         <div className="relative mt-5 w-full flex justify-between">
@@ -106,6 +145,7 @@ const SignUpForm = ({ add }) => {
               id="firstName"
               className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=""
+              defaultValue={user.first_name}
               required
             />
             <label
@@ -121,6 +161,7 @@ const SignUpForm = ({ add }) => {
               id="lastName"
               className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=""
+              defaultValue={user.last_name}
               required
             />
             <label
@@ -136,6 +177,7 @@ const SignUpForm = ({ add }) => {
             type="date"
             id="birthDate"
             className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            defaultValue={user.birthday}
             required
           />
           <label
@@ -153,12 +195,13 @@ const SignUpForm = ({ add }) => {
             <div className="mt-6 flex justify-around">
               <div className="flex">
                 <input
-                  id="male"
+                  id="gender"
                   type="radio"
-                  value="male"
+                  value="M"
                   name="default-radio"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 peer"
-                  defaultChecked={true}
+                  checked={user.gender === "M"}
+                  onChange={() => setUser({ ...user, gender: "M" })}
                 />
                 <label
                   htmlFor="male"
@@ -169,11 +212,13 @@ const SignUpForm = ({ add }) => {
               </div>
               <div className="flex">
                 <input
-                  id="female"
+                  id="gender"
                   type="radio"
-                  value="female"
+                  value="F"
                   name="default-radio"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 peer"
+                  checked={user.gender === "F"}
+                  onChange={() => setUser({ ...user, gender: "F" })}
                 />
                 <label
                   htmlFor="female"
@@ -187,6 +232,8 @@ const SignUpForm = ({ add }) => {
           <select
             id="cities"
             className="bg-transparent border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            value={user.city}
+            onChange={(e) => setUser({ ...user, city: e.target.value })}
             required
           >
             <option value>Choose a city</option>
@@ -203,10 +250,12 @@ const SignUpForm = ({ add }) => {
             id="address"
             className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
             placeholder=""
+            defaultValue={user.address}
           />
           <label
             htmlFor="address"
             className="absolute text-sm left-0 text-gray-500 duration-300 px-2 peer-focus:text-blue-600 peer-placeholder-shown:translate-y-2 -translate-y-6 top-1 peer-focus:-translate-y-6"
+            defaultValue={user.address}
           >
             Address
           </label>

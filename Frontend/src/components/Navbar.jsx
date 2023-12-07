@@ -92,6 +92,14 @@ const Navbar = () => {
                 Tickets
               </Link>
             </li>
+            <li>
+              <Link
+                to="/profile"
+                className="block py-2 px-2 rounded text-white"
+              >
+                Profile
+              </Link>
+            </li>
             <li className="flex flex-grow justify-center md:justify-end">
               {!isLoggedIn ? (
                 <>
@@ -107,12 +115,18 @@ const Navbar = () => {
                   </Link>
                 </>
               ) : (
-                <button
-                  className="block py-2 px-4 rounded text-white bg-black font-bold"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
+                <>
+                  <p className="p-2">
+                    Logged in as{" "}
+                    <span className="font-bold">{Cookies.get("username")}</span>
+                  </p>
+                  <button
+                    className="block py-2 px-4 rounded text-white bg-black font-bold"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </>
               )}
             </li>
           </ul>

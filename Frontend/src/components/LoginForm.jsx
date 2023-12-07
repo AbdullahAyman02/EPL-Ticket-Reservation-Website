@@ -2,9 +2,11 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const { setIsLoggedIn } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -17,8 +19,10 @@ const LoginForm = () => {
         if (res.status === 200) {
           Cookies.set("token", res.data.accessToken);
           Cookies.set("username", e.target.username.value);
+          Cookies.set("jwt", res.data.refreshToken);
           console.log(res);
           setIsLoggedIn(true);
+          navigate("/");
         } else {
           alert(res.data.data);
         }

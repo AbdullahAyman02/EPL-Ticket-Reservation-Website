@@ -7,11 +7,12 @@ import nodemailer from "nodemailer";
 dotenv.config();
 
 const handleSignup = async (req, res) => {
+  console.log("Data received: ", req.body);
   const {
     username,
     password,
-    first_name,
-    last_name,
+    firstName: first_name,
+    lastName: last_name,
     birthday,
     gender,
     city,
@@ -20,6 +21,7 @@ const handleSignup = async (req, res) => {
   } = req.body;
   
   try {
+
     // All fields are required, except address
     if(!username || !password || !first_name || !last_name || !birthday || !gender || !city || !email) {
       return res.status(400).json({
@@ -62,10 +64,10 @@ const handleSignup = async (req, res) => {
       refresh_token: null,
       is_verified: false,
     });
-
+    
     await SendEmail(req, res);
 
-    res.status(201).json({
+    res.status(200).json({
       status: "success",
       username: user.username,    
     });
@@ -135,7 +137,7 @@ const handleLogin = async (req, res) => {
     userData.save();
 
     res.cookie("jwt", refreshToken, {
-      httpOnly: true,
+      // httpOnly: true,
       sameSite: "None",
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
@@ -144,6 +146,7 @@ const handleLogin = async (req, res) => {
     res.status(200).json({
       status: "success",
       accessToken,
+      refreshToken,
       username: userData.username,
     });
   } catch (err) {
@@ -157,6 +160,7 @@ const handleLogin = async (req, res) => {
 const handleLogout = async (req, res) => {
   //1. Remove Refresh Token from Client
   const cookies = req.cookies;
+  console.log(cookies);
   if (!cookies?.jwt) return res.sendStatus(204); //No content already
   const refreshToken = cookies.jwt;
   const foundUser = await User.findOne({
@@ -171,11 +175,12 @@ const handleLogout = async (req, res) => {
   //2. Remove Refresh Token from Database
   foundUser.refresh_token = null;
   foundUser.save();
-  res.sendStatus(204);
+  res.sendStatus(200);
 };
 
 const getUserbyUsername = async (req, res) => {
   const username = req.params.username;
+  console.log(username);
   try {
     const user = await User.findOne({
       attributes: ['username', 'first_name', 'last_name', 'birthday', 'gender', 'city', 'address', 'email'],
@@ -200,8 +205,8 @@ const handleEdit = async (req, res) => {
   const {
     username,
     password,
-    first_name,
-    last_name,
+    firstName: first_name,
+    lastName: last_name,
     birthday,
     gender,
     city,
@@ -210,12 +215,6 @@ const handleEdit = async (req, res) => {
 
   try {
     // All fields are required, except address
-    if(!username || !password || !first_name || !last_name || !birthday || !gender || !city) {
-      return res.status(400).json({
-        status: "Bad Request",
-        message: "All fields except address are required",
-      });
-    }
 
     // Birthday must be in the past
     if (new Date(birthday) > new Date()) {
@@ -225,22 +224,39 @@ const handleEdit = async (req, res) => {
       });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    let user;
 
-    let user = await User.update({
-      password: hashedPassword,
-      first_name,
-      last_name,
-      birthday,
-      gender,
-      city,
-      address,
-    }, {
-      where: {
-        username: username,
-      },
-    });
-    res.status(201).json({
+    // check if password is entered and not null, if null do not update it
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+        user = await User.update({
+        password: hashedPassword,
+        first_name,
+        last_name,
+        gender,
+        city,
+        address,
+      }, {
+        where: {
+          username: username,
+        },
+      });
+    }
+    else {
+        user = await User.update({
+        first_name,
+        last_name,
+        birthday,
+        gender,
+        city,
+        address,
+      }, {
+        where: {
+          username: username,
+        },
+      });
+    }
+    res.status(200).json({
       status: "success",
       user: user,
     });
@@ -308,6 +324,8 @@ const SendEmail = async (req, res) => {
     { expiresIn: "10m" }
   );
 
+  const encodedToken = Buffer.from(token).toString('base64');
+
   const mailConfigurations = {
     // It should be a string of sender/server email
     from: "ballerzfauwusa@gmail.com",
@@ -321,7 +339,7 @@ const SendEmail = async (req, res) => {
     text: `Hi! There, You have recently visited 
           our website and entered your email.
           Please follow the given link to verify your email
-          http://localhost:${process.env.PORT}/verify/${token} 
+          http://localhost:5173/verify/${encodedToken} 
           Thanks`,
   };
 
@@ -389,6 +407,7 @@ const deleteUser = async (req, res) => {
 
 const handleVerify = async (req, res) => {
   const { token } = req.params;
+  console.log(token);
 
   if (!token) {
     return res.status(400).json({

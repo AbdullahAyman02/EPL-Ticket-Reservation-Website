@@ -1,11 +1,11 @@
 import SignUpForm from "../components/SignUpForm.jsx";
 
-function SignUp() {
+function Profile() {
   return (
     <div>
-      <SignUpForm add={true}/>
+      <SignUpForm add={false} />
     </div>
   );
 }
 
-export default SignUp;
+export default Profile;
