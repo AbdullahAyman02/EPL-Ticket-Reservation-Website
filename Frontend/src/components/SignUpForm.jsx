@@ -2,31 +2,58 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const SignUpForm = () => {
+const SignUpForm = ({add}) => {
   const [cities, setCities] = useState([]);
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post("http://localhost:20396/signup", {
-        username: e.target.username.value,
-        password: e.target.password.value,
-        firstName: e.target.firstName.value,
-        lastName: e.target.lastName.value,
-        birthday: e.target.birthDate.value,
-        gender: e.target.gender.value,
-        city: e.target.city.value,
-        address: e.target.address.value,
-        email: e.target.email.value,
-      })
-      .then((res) => {
-        if (res.status === "success") {
-          Cookies.set("token", res.data.token);
-          Cookies.set("username", e.target.username.value);
-          console.log(Cookies.get("token"));
-        } else {
-          alert(res.data.message);
-        }
-      });
+    if (add)
+    {
+      axios
+        .post(`${import.meta.env.VITE_BACKEND_URL}/signup`, {
+          username: e.target.username.value,
+          password: e.target.password.value,
+          firstName: e.target.firstName.value,
+          lastName: e.target.lastName.value,
+          birthday: e.target.birthDate.value,
+          gender: e.target.gender.value,
+          city: e.target.city.value,
+          address: e.target.address.value,
+          email: e.target.email.value,
+        })
+        .then((res) => {
+          if (res.status === "success") {
+            Cookies.set("token", res.data.token);
+            Cookies.set("username", e.target.username.value);
+            console.log(Cookies.get("token"));
+          } else {
+            alert(res.data.data);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    else
+    {
+      axios
+        .put(`${import.meta.env.VITE_BACKEND_URL}/edit`, {
+          username: e.target.username.value,
+          password: e.target.password.value,
+          firstName: e.target.firstName.value,
+          lastName: e.target.lastName.value,
+          birthday: e.target.birthDate.value,
+          gender: e.target.gender.value,
+          city: e.target.city.value,
+          address: e.target.address.value,
+          email: e.target.email.value,
+        })
+        .then((res) => {
+            alert(res.data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   useEffect(() => {
@@ -41,7 +68,7 @@ const SignUpForm = () => {
   return (
     <div className="mt-3 w-3/12 min-w-fit">
       <form onSubmit={handleSubmit}>
-        <div className="relative mt-2">
+        { add && <div className="relative mt-2">
           <input
             type="text"
             id="username"
@@ -55,7 +82,7 @@ const SignUpForm = () => {
           >
             Username
           </label>
-        </div>
+        </div>}
         <div className="relative mt-5">
           <input
             type="password"
@@ -157,7 +184,7 @@ const SignUpForm = () => {
             </div>
           </div>
           <select
-            id="countries"
+            id="cities"
             className="bg-transparent border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             required
           >
@@ -181,7 +208,7 @@ const SignUpForm = () => {
             Address
           </label>
         </div>
-        <div className="relative mt-5">
+        { add && <div className="relative mt-5">
           <input
             type="email"
             id="email"
@@ -195,12 +222,12 @@ const SignUpForm = () => {
           >
             Email Address
           </label>
-        </div>
+        </div>}
         <button
           type="submit"
           className="text-white mt-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
         >
-          Sign Up
+          { add ? "Sign Up" : "Update Information" }
         </button>
       </form>
     </div>

@@ -5,6 +5,8 @@ import Reservation from "./pages/Reservation";
 // import Login from "./pages/Login";
 import scrollNavbar from "./scripts/scrollNavbar";
 import SignUp from "./pages/SignUp";
+import MatchForm from "./components/MatchForm";
+import StadiumForm from "./components/StadiumForm";
 
 function App() {
   return (
@@ -13,7 +15,9 @@ function App() {
       <Navbar></Navbar>
       <Home></Home>
       <SignUp></SignUp>
+      <MatchForm></MatchForm>
       <Reservation></Reservation>
+      <StadiumForm></StadiumForm>
     </div>
   );
 }
