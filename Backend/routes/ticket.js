@@ -1,4 +1,5 @@
 import { Route, Router } from "express";
+import verifyJWT  from "../middleware/verifyJWT.js";
 import {
     getTicketsByMatchID,
     addTicket,
@@ -7,6 +8,7 @@ import {
 
 const ticketRouter = Router();
 
+ticketRouter.use(verifyJWT('F'));
 ticketRouter.get("/getTicketsByMatchID/:id", getTicketsByMatchID);
 ticketRouter.post("/addTicket", addTicket);
 ticketRouter.delete("/deleteTicket/:ticket_no", deleteTicket);

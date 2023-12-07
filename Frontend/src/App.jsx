@@ -1,24 +1,27 @@
-import LoginForm from "./components/LoginForm";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import Navbar from "./components/Navbar";
+
 import Home from "./pages/Home";
-import Reservation from "./pages/Reservation";
-// import Login from "./pages/Login";
-import scrollNavbar from "./scripts/scrollNavbar";
 import SignUp from "./pages/SignUp";
-import MatchForm from "./components/MatchForm";
-import StadiumForm from "./components/StadiumForm";
+import NotFound from "./pages/404.JSX";
+import Login from "./pages/Login";
+import MatchSchedule from "./components/MatchSchedule";
 
 function App() {
   return (
-    <div onScroll={scrollNavbar}>
-      <LoginForm></LoginForm>
-      <Navbar></Navbar>
-      <Home></Home>
-      <SignUp></SignUp>
-      <MatchForm></MatchForm>
-      <Reservation></Reservation>
-      <StadiumForm></StadiumForm>
-    </div>
+    <>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/schedule" element={<MatchSchedule />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 

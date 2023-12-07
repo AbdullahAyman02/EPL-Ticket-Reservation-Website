@@ -1,4 +1,5 @@
 import MatchSlot from "./MatchSlot";
+import axios from "axios";
 import { useEffect, useState } from "react";
 
 const MatchSchedule = () => {
@@ -6,9 +7,13 @@ const MatchSchedule = () => {
 
   useEffect(() => {
     const fetchMatches = async () => {
-      const request = await fetch("http://localhost:20396/getMatches");
-      const data = await request.json();
-      setMatches(data.match);
+      axios
+        .get(`${import.meta.env.VITE_BACKEND_URL}/getMatches`)
+        .then((res) => {
+          if (res.status === 200) {
+            setMatches(res.data.match);
+          }
+        });
     };
     fetchMatches();
   }, []);
