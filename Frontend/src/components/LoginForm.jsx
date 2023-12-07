@@ -1,11 +1,15 @@
 import Cookies from "js-cookie";
 import axios from "axios";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 
 const LoginForm = () => {
+  const { setIsLoggedIn } = useContext(AuthContext);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post(`${import.meta.env.VITE_BACKEND_URL}/login`, {
+      .post(`${import.meta.env.VITE_BACKEND_URL}/user/login`, {
         username: e.target.username.value,
         password: e.target.password.value,
       })
@@ -14,6 +18,7 @@ const LoginForm = () => {
           Cookies.set("token", res.data.accessToken);
           Cookies.set("username", e.target.username.value);
           console.log(res);
+          setIsLoggedIn(true);
         } else {
           alert(res.data.data);
         }

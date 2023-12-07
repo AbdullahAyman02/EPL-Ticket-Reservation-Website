@@ -2,14 +2,14 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const SignUpForm = ({add}) => {
+// eslint-disable-next-line react/prop-types
+const SignUpForm = ({ add }) => {
   const [cities, setCities] = useState([]);
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (add)
-    {
+    if (add) {
       axios
-        .post(`${import.meta.env.VITE_BACKEND_URL}/signup`, {
+        .post(`${import.meta.env.VITE_BACKEND_URL}/user/signup`, {
           username: e.target.username.value,
           password: e.target.password.value,
           firstName: e.target.firstName.value,
@@ -21,7 +21,7 @@ const SignUpForm = ({add}) => {
           email: e.target.email.value,
         })
         .then((res) => {
-          if (res.status === "success") {
+          if (res.status === 200) {
             Cookies.set("token", res.data.token);
             Cookies.set("username", e.target.username.value);
             console.log(Cookies.get("token"));
@@ -32,11 +32,9 @@ const SignUpForm = ({add}) => {
         .catch((err) => {
           console.log(err);
         });
-    }
-    else
-    {
+    } else {
       axios
-        .put(`${import.meta.env.VITE_BACKEND_URL}/edit`, {
+        .put(`${import.meta.env.VITE_BACKEND_URL}/user/edit`, {
           username: e.target.username.value,
           password: e.target.password.value,
           firstName: e.target.firstName.value,
@@ -48,7 +46,7 @@ const SignUpForm = ({add}) => {
           email: e.target.email.value,
         })
         .then((res) => {
-            alert(res.data.data);
+          alert(res.data.data);
         })
         .catch((err) => {
           console.log(err);
@@ -57,32 +55,35 @@ const SignUpForm = ({add}) => {
   };
 
   useEffect(() => {
-    axios.post("https://countriesnow.space/api/v0.1/countries/cities", {
-      country: "egypt",
-    }).then((res) => {
-      setCities(res.data.data);
-    });
+    axios
+      .post("https://countriesnow.space/api/v0.1/countries/cities", {
+        country: "egypt",
+      })
+      .then((res) => {
+        setCities(res.data.data);
+      });
   }, []);
-
 
   return (
     <div className="mt-3 w-3/12 min-w-fit">
       <form onSubmit={handleSubmit}>
-        { add && <div className="relative mt-2">
-          <input
-            type="text"
-            id="username"
-            className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=""
-            required
-          />
-          <label
-            htmlFor="username"
-            className="absolute text-sm left-0 text-gray-500 duration-300 px-2 peer-focus:text-blue-600 peer-placeholder-shown:translate-y-2 -translate-y-6 top-1 peer-focus:-translate-y-6"
-          >
-            Username
-          </label>
-        </div>}
+        {add && (
+          <div className="relative mt-2">
+            <input
+              type="text"
+              id="username"
+              className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              placeholder=""
+              required
+            />
+            <label
+              htmlFor="username"
+              className="absolute text-sm left-0 text-gray-500 duration-300 px-2 peer-focus:text-blue-600 peer-placeholder-shown:translate-y-2 -translate-y-6 top-1 peer-focus:-translate-y-6"
+            >
+              Username
+            </label>
+          </div>
+        )}
         <div className="relative mt-5">
           <input
             type="password"
@@ -157,7 +158,7 @@ const SignUpForm = ({add}) => {
                   value="male"
                   name="default-radio"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 peer"
-                  defaultChecked = {true}
+                  defaultChecked={true}
                 />
                 <label
                   htmlFor="male"
@@ -190,7 +191,9 @@ const SignUpForm = ({add}) => {
           >
             <option value>Choose a city</option>
             {cities.map((city) => (
-              <option key={city} value={city}>{city}</option>
+              <option key={city} value={city}>
+                {city}
+              </option>
             ))}
           </select>
         </div>
@@ -208,26 +211,28 @@ const SignUpForm = ({add}) => {
             Address
           </label>
         </div>
-        { add && <div className="relative mt-5">
-          <input
-            type="email"
-            id="email"
-            className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=""
-            required
-          />
-          <label
-            htmlFor="email"
-            className="absolute text-sm left-0 text-gray-500 duration-300 px-2 peer-focus:text-blue-600 peer-placeholder-shown:translate-y-2 -translate-y-6 top-1 peer-focus:-translate-y-6"
-          >
-            Email Address
-          </label>
-        </div>}
+        {add && (
+          <div className="relative mt-5">
+            <input
+              type="email"
+              id="email"
+              className="block border border-white-300 px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              placeholder=""
+              required
+            />
+            <label
+              htmlFor="email"
+              className="absolute text-sm left-0 text-gray-500 duration-300 px-2 peer-focus:text-blue-600 peer-placeholder-shown:translate-y-2 -translate-y-6 top-1 peer-focus:-translate-y-6"
+            >
+              Email Address
+            </label>
+          </div>
+        )}
         <button
           type="submit"
           className="text-white mt-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
         >
-          { add ? "Sign Up" : "Update Information" }
+          {add ? "Sign Up" : "Update Information"}
         </button>
       </form>
     </div>

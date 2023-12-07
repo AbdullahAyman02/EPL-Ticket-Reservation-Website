@@ -1,9 +1,39 @@
-import Logo from "../assets/Logo.png";
-import toggleNavbar from "../scripts/toggleNavbar";
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
+import { useEffect, useContext } from "react";
+
+import Logo from "../assets/Logo.png";
+import toggleNavbar from "../scripts/toggleNavbar";
+import { AuthContext } from "../contexts/AuthContext";
+import axios from "axios";
 
 const Navbar = () => {
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+  const handleLogout = () => {
+    axios.defaults.withCredentials = true;
+    axios
+      .post(`${import.meta.env.VITE_BACKEND_URL}/user/logout`)
+      .then((res) => {
+        if (res.status === 200) {
+          console.log(res);
+          setIsLoggedIn(false);
+        } else {
+          console.log(res);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    Cookies.remove("token");
+    Cookies.remove("username");
+  };
+
+  useEffect(() => {
+    if (Cookies.get("token")) {
+      setIsLoggedIn(true);
+    }
+  }, [isLoggedIn]);
+
   return (
     <nav id="navbar" className="z-10 top-0 w-full bg-[#360137] bg-opacity-50">
       <Link to="/" className="flex items-center px-2">
@@ -63,7 +93,7 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="flex flex-grow justify-center md:justify-end">
-              {Cookies.get("token") ? (
+              {!isLoggedIn ? (
                 <>
                   <Link to="/login" className="mx-4">
                     <button className="block  py-2 px-4 rounded text-white bg-black font-bold">
@@ -77,11 +107,12 @@ const Navbar = () => {
                   </Link>
                 </>
               ) : (
-                <Link to="/login">
-                  <button className="block py-2 px-4 rounded text-white bg-black font-bold">
-                    Logout
-                  </button>
-                </Link>
+                <button
+                  className="block py-2 px-4 rounded text-white bg-black font-bold"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
               )}
             </li>
           </ul>

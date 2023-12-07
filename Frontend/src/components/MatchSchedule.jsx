@@ -8,7 +8,7 @@ const MatchSchedule = () => {
   useEffect(() => {
     const fetchMatches = async () => {
       axios
-        .get(`${import.meta.env.VITE_BACKEND_URL}/getMatches`)
+        .get(`${import.meta.env.VITE_BACKEND_URL}/match/getMatches`)
         .then((res) => {
           if (res.status === 200) {
             setMatches(res.data.match);

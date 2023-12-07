@@ -13,8 +13,9 @@ import cors from 'cors'
 
 dotenv.config();
 var corsOptions = {
-    origin: '*',
-    optionsSuccessStatus: 200
+    origin: 'http://localhost:5173',
+    optionsSuccessStatus: 200,
+    credentials: true,
 }
 
 // Test DB
