@@ -1,94 +1,114 @@
 import axios from "axios";
+import Cookie from "js-cookie";
 import { useState, useEffect } from "react";
 
 const MatchForm = ({add}) => {
     const [teams, setTeams] = useState([]);
     const [stadiums, setStadiums] = useState([]);
     const [referees, setReferees] = useState([]);
+    const [error, setError] = useState("");
   
+    axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get("token")}`;        
     const handleSubmit = (e) => {
         e.preventDefault();
         if (e.target.home_team.value === e.target.away_team.value)
         {
-            alert("Home team and away team can't be the same");
+            setError("Home team and away team can't be the same")            
             return;
         }
         if (e.target.referee.value === e.target.linesman1.value || e.target.referee.value === e.target.linesman2.value)
         {
-            alert("Referee can't be a linesman");
+            setError("Referee can't be a linesman");
             return;
         }
         if (e.target.linesman1.value === e.target.linesman2.value)
         {
-            alert("Linesman 1 and linesman 2 can't be the same");
+            setError("Linesman 1 and linesman 2 can't be the same");
             return;
         }
         if (add)
         {
             axios
-            .post(`${import.meta.env.VITE_BACKEND_URL}/addMatch`, {
+            .post(`${import.meta.env.VITE_BACKEND_URL}/match/addMatch`, {
                 home_team: e.target.home_team.value,
                 away_team: e.target.away_team.value,
-                stadium: e.target.stadium.value,
+                stadium_id: e.target.stadium.value,
                 date: e.target.date.value,
                 time: e.target.time.value,
                 referee_id: e.target.referee.value,
-                linesman1_id: e.target.linesman1.value,
-                linesman2_id: e.target.linesman2.value,
+                linesman_1: e.target.linesman1.value,
+                linesman_2: e.target.linesman2.value,
             })
             .then((res) => {
                 console.log(res.data);
             })
             .catch((err) => {
-                console.log(err);
+                setError(err.response.data.message);
             });
         }
         else
         {
             axios
-            .put(`${import.meta.env.VITE_BACKEND_URL}/updateMatch`, {
+            .put(`${import.meta.env.VITE_BACKEND_URL}/match/updateMatch`, {
                 home_team: e.target.home_team.value,
                 away_team: e.target.away_team.value,
-                stadium: e.target.stadium.value,
+                stadium_id: e.target.stadium.value,
                 date: e.target.date.value,
                 time: e.target.time.value,
                 referee_id: e.target.referee.value,
-                linesman1_id: e.target.linesman1.value,
-                linesman2_id: e.target.linesman2.value,
+                linesman_1: e.target.linesman1.value,
+                linesman_2: e.target.linesman2.value,
             })
             .then((res) => {
                 console.log(res);
             })
             .catch((err) => {
-                console.log(err);
+                setError(err.response.data.message);
             });
         }
     };
 
     useEffect(() => {
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}/getTeams`)
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/team/getTeams`)
         .then((res) => {
+            console.log(res);
             setTeams(res.data.teams);
+        })
+        .catch((err) => {
+            console.log(err);
         });
     }, []);
 
     useEffect(() => {
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}/getStadiums`)
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/stadium/getStadiums`)
         .then((res) => {
             setStadiums(res.data.stadiums);
+        })
+        .catch((err) => {
+            console.log(err);
         });
     }, []);
 
     useEffect(() => {
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}/getReferees`)
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/referee/getReferees`)
         .then((res) => {
             setReferees(res.data.referees);
+        })
+        .catch((err) => {
+            console.log(err);
         });
     }, []);
 
   return (
     <div className="mt-3 w-3/12 min-w-[300px]">
       <form onSubmit={handleSubmit}>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+            <strong className="font-bold">Error!</strong>
+            <br />
+            <span className="block sm:inline"> {error}</span>
+          </div>
+        )}
         <div className="relative mt-5 w-full flex justify-between">
             <select
                 id="home_team"
