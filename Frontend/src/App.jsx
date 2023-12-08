@@ -6,11 +6,13 @@ import Home from "./pages/Home";
 import SignUp from "./pages/SignUp";
 import NotFound from "./pages/404";
 import Login from "./pages/Login";
-import MatchSchedule from "./components/MatchSchedule";
+// import MatchSchedule from "./components/MatchSchedule";
 import { AuthContextProvider } from "./contexts/AuthContext";
 import EmailVerification from "./pages/EmailVerification";
 import Profile from "./pages/Profile";
 import Reservation from "./pages/Reservation";
+import Schedule from "./pages/Schedule";
+import CreateMatch from "./pages/CreateMatch";
 
 function App() {
   return (
@@ -21,10 +23,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/schedule" element={<MatchSchedule />} />
+          <Route path="/schedule" element={<Schedule />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/reservation/:match_id" element={<Reservation />} />
           <Route path="/verify/:token" element={<EmailVerification />} />
+          <Route path="/match/create" element={<CreateMatch />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -21,6 +21,7 @@ const addMatch = async (req, res) => {
     }
     // Must be 3 different referees
     if (referee_id === linesman_1 || referee_id === linesman_2 || linesman_1 === linesman_2) {
+      console.log(referee_id, linesman_1, linesman_2);
       res.status(400).json({
         status: "fail",
         message: "Must be 3 different referees",
@@ -44,11 +45,12 @@ const addMatch = async (req, res) => {
       linesman_1,
       linesman_2,
     });
-    res.status(201).json({
+    res.status(200).json({
         status: "success",
         match: match,
     });
   } catch (err) {
+    console.log(err);
     res.status(500).json({
       status: "fail",
       message: err,

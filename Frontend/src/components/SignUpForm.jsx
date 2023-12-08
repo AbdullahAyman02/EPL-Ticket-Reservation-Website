@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 // eslint-disable-next-line react/prop-types
 const SignUpForm = ({ add }) => {
   const [cities, setCities] = useState([]);
+  const [error, setError] = useState("");
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -29,7 +30,7 @@ const SignUpForm = ({ add }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (e.target.password.value !== e.target.confirm_password.value) {
-      alert("Passwords don't match");
+      setError("Passwords don't match")
       return;
     }
     if (add) {
@@ -50,11 +51,11 @@ const SignUpForm = ({ add }) => {
             Cookies.set("username", e.target.username.value);
             console.log(Cookies.get("token"));
           } else {
-            alert(res.data.data);
+            alert(res.data.data);        
           }
         })
         .catch((err) => {
-          console.log(err);
+          setError(err.response.data.message)        
         });
     } else {
       axios
@@ -72,7 +73,7 @@ const SignUpForm = ({ add }) => {
           console.log(res);
         })
         .catch((err) => {
-          console.log(err);
+          setError(err.response.data.message);
         });
     }
   };
@@ -90,8 +91,15 @@ const SignUpForm = ({ add }) => {
   return (
     <div className="mt-3 w-3/12 min-w-fit">
       <form onSubmit={handleSubmit}>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+            <strong className="font-bold">Error!</strong>
+            <br />
+            <span className="block sm:inline"> {error}</span>
+          </div>
+        )}
         {add && (
-          <div className="relative mt-2">
+          <div className="relative mt-5">
             <input
               type="text"
               id="username"
@@ -188,10 +196,10 @@ const SignUpForm = ({ add }) => {
         </div>
         <div className="mt-2 flex justify-around">
           <div className="w-8/12">
-            <label className="absolute left-1 text-sm text-gray-500 peer-focus:text-blue-600">
+            <label className="relative text-sm text-gray-500 peer-focus:text-blue-600">
               Gender
             </label>
-            <div className="mt-6 flex justify-around">
+            <div className="mt-1 flex justify-around">
               <div className="flex">
                 <input
                   id="gender"
@@ -199,7 +207,7 @@ const SignUpForm = ({ add }) => {
                   value="M"
                   name="default-radio"
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 peer"
-                  checked={user.gender === "M"}
+                  checked={add || user.gender === "M"}
                   onChange={() => setUser({ ...user, gender: "M" })}
                 />
                 <label
@@ -230,7 +238,7 @@ const SignUpForm = ({ add }) => {
           </div>
           <select
             id="cities"
-            className="bg-transparent border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            className="bg-transparent border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-8/12 p-2.5"
             value={user.city}
             onChange={(e) => setUser({ ...user, city: e.target.value })}
             required
