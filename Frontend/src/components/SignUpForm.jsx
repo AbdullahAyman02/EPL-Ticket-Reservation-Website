@@ -79,6 +79,7 @@ const SignUpForm = ({ add }) => {
   };
 
   useEffect(() => {
+    axios.defaults.withCredentials = false;
     axios
       .post("https://countriesnow.space/api/v0.1/countries/cities", {
         country: "egypt",
