@@ -13,7 +13,7 @@ import cors from 'cors'
 
 dotenv.config();
 var corsOptions = {
-    origin: '*',
+    origin: 'http://localhost:5173',
     optionsSuccessStatus: 200,
     credentials: true,
 }

@@ -1,9 +1,10 @@
-import { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext";
 import axios from "axios";
 
 const EmailVerification = () => {
+  const { setIsLoggedIn } = useContext(AuthContext);
   const { token } = useParams();
   console.log(token);
   const navigate = useNavigate();
@@ -11,10 +12,18 @@ const EmailVerification = () => {
     const verifyEmail = async () => {
       try {
         const decodedToken = atob(token);
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/user/verify/${decodedToken}`
-        );
-        console.log(response);
+        axios.defaults.withCredentials = true;
+        axios
+          .get(
+            `${import.meta.env.VITE_BACKEND_URL}/user/verify/${decodedToken}`
+          )
+          .then((res) => {
+            if (res.status === 200) {
+              setIsLoggedIn(true);
+            } else {
+              console.log(res);
+            }
+          });
         navigate("/"); // Feedback to the user
       } catch (error) {
         console.error(error);

@@ -1,15 +1,17 @@
 import Cookies from "js-cookie";
 import axios from "axios";
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const { setIsLoggedIn } = useContext(AuthContext);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    axios.defaults.withCredentials = true;
     axios
       .post(`${import.meta.env.VITE_BACKEND_URL}/user/login`, {
         username: e.target.username.value,
@@ -23,18 +25,24 @@ const LoginForm = () => {
           console.log(res);
           setIsLoggedIn(true);
           navigate("/");
-        } else {
-          alert(res.data.data);
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response.data.message);
+        setError(err.response.data.message);
       });
   };
 
   return (
     <div className="mt-3 w-3/12 min-w-fit">
       <form onSubmit={handleSubmit}>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+            <strong className="font-bold">Error!</strong>
+            <br />
+            <span className="block sm:inline"> {error}</span>
+          </div>
+        )}
         <div className="relative mt-5">
           <input
             type="text"

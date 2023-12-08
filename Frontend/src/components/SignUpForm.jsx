@@ -47,7 +47,6 @@ const SignUpForm = ({ add }) => {
         })
         .then((res) => {
           if (res.status === 200) {
-            Cookies.set("token", res.data.token);
             Cookies.set("username", e.target.username.value);
             console.log(Cookies.get("token"));
           } else {

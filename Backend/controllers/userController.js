@@ -137,7 +137,7 @@ const handleLogin = async (req, res) => {
     userData.save();
 
     res.cookie("jwt", refreshToken, {
-      // httpOnly: true,
+      httpOnly: true,
       sameSite: "None",
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
@@ -146,7 +146,6 @@ const handleLogin = async (req, res) => {
     res.status(200).json({
       status: "success",
       accessToken,
-      refreshToken,
       username: userData.username,
     });
   } catch (err) {
@@ -160,13 +159,13 @@ const handleLogin = async (req, res) => {
 const handleLogout = async (req, res) => {
   //1. Remove Refresh Token from Client
   const cookies = req.cookies;
-  console.log(cookies);
+  // console.log(cookies);
   if (!cookies?.jwt) return res.sendStatus(204); //No content already
   const refreshToken = cookies.jwt;
   const foundUser = await User.findOne({
     where: { refresh_token: refreshToken },
   });
-  console.log(foundUser);
+  // console.log(foundUser);
   res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
   if (!foundUser) {
     return res.sendStatus(204);
@@ -308,8 +307,8 @@ const SendEmail = async (req, res) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "ballerzfauwusa@gmail.com",
-      pass: "vhsatabazvnyxksu",
+      user: "eplmanagement03@gmail.com",
+      pass: "fnlfcqvgxtzbgwey",
     },
     tls: {
       rejectUnauthorized: false,
@@ -328,7 +327,7 @@ const SendEmail = async (req, res) => {
 
   const mailConfigurations = {
     // It should be a string of sender/server email
-    from: "ballerzfauwusa@gmail.com",
+    from: "eplmanagement03@gmail.com",
 
     to: req.body.email,
 
