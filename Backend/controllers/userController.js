@@ -30,6 +30,8 @@ const handleSignup = async (req, res) => {
       });
     }
 
+    console.log(1);
+
     // Birthday must be in the past
     if (new Date(birthday) > new Date()) {
       return res.status(400).json({
@@ -37,6 +39,8 @@ const handleSignup = async (req, res) => {
         message: "Birthday must be in the past",
       });
     }
+
+    console.log(2);
 
     // Check if username already exists
     const is_exist = await User.findOne({ where: { username: username } });
@@ -46,6 +50,8 @@ const handleSignup = async (req, res) => {
         message: "Username already exists",
       });
     }
+
+    console.log(1);
 
     //Encrypt the password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -63,6 +69,12 @@ const handleSignup = async (req, res) => {
       role: 'F',
       refresh_token: null,
       is_verified: false,
+    }).catch((err) => {
+      console.log("Error: ", err);
+      return res.status(500).json({
+        status: "fail",
+        message: "Email already exists",
+      });
     });
     
     await SendEmail(req, res);
@@ -269,9 +281,13 @@ const handleEdit = async (req, res) => {
 };
 
 const handleRefresh = async (req, res) => {
+  console.log("Refresh Token Requested");
   //1. Retrieve Refresh Token from Client
   const cookies = req.cookies;
-  if (!cookies?.jwt) return res.sendStatus(401);
+  if (!cookies?.jwt) {
+    console.log("No Refresh Token Found");
+    return res.sendStatus(401);
+  }
   const refreshToken = cookies.jwt;
   const foundUser = await User.findOne({
     where: { refresh_token: refreshToken },
@@ -279,6 +295,7 @@ const handleRefresh = async (req, res) => {
   if (!foundUser) {
     return res.sendStatus(401);
   }
+  console.log("Refresh Token Found");
 
   //2. Check Validity and Generate new Access Token
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
@@ -297,9 +314,7 @@ const handleRefresh = async (req, res) => {
 
   res.status(200).json({
     status: "success",
-    data: {
-      accessToken,
-    },
+    accessToken,
   });
 };
 
@@ -462,10 +477,8 @@ const handleVerify = async (req, res) => {
     res.status(200).json({
       status: "success",
       message: "User successfully verified",
-      data: {
-        accessToken,
-        username: user.username,
-      },
+      accessToken,
+      username: user.username,
     });
   } catch (err) {
     res.status(401).json({

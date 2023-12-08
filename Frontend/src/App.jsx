@@ -10,6 +10,7 @@ import MatchSchedule from "./components/MatchSchedule";
 import { AuthContextProvider } from "./contexts/AuthContext";
 import EmailVerification from "./pages/EmailVerification";
 import Profile from "./pages/Profile";
+import Reservation from "./pages/Reservation";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/schedule" element={<MatchSchedule />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/reservation/:match_id" element={<Reservation />} />
           <Route path="/verify/:token" element={<EmailVerification />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -24,6 +24,7 @@ const MatchSchedule = () => {
         matches.map((match) => (
           <MatchSlot
             key={match.id}
+            match_id={match.id}
             team1_id={match.hometeam.id}
             team2_id={match.awayteam.id}
             team1={match.hometeam.name}

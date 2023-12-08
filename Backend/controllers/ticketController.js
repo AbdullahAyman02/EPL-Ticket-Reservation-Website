@@ -4,6 +4,7 @@ import { Match } from "../model/model.js";
 import { Stadium } from "../model/model.js";
 
 const getTicketsByMatchID = async (req, res) => {
+    console.log("ana f getTIcketsByMatchID\n");
     try {
         // Check if match exists
         const match = await Match.findOne({
@@ -21,14 +22,17 @@ const getTicketsByMatchID = async (req, res) => {
         }
 
         const tickets = await Ticket.findAll({
-            attributes:['match_id', 'seat_no', 'ticket_no'],
+            attributes:['seat_no'],
             where: {
                 match_id: req.params.id
             }
         });
+
+        const seatNumbers = tickets.map(ticket => ticket.seat_no);
+
         res.status(200).json({
             status: "success",            
-            tickets: tickets,
+            tickets: seatNumbers,
         });
     } catch (err) {
         console.log(err);
@@ -127,7 +131,7 @@ const addTicket = async (req, res) => {
             seat_no,
             username
         });
-        res.status(201).json({
+        res.status(200).json({
             status: "success",
             ticket: ticket,
         });

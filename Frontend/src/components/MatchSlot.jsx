@@ -1,8 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDay, faFutbol } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
-const MatchSlot = ({ team1_id, team2_id, team1, team2, date, stadium }) => {
+const MatchSlot = ({ match_id, team1_id, team2_id, team1, team2, date, stadium }) => {
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`/reservation/${match_id}`);
+  };
   const matchDate = new Date(date);
   return (
     <div className="m-3 bg-black bg-opacity-60 rounded-xl">
@@ -35,7 +40,12 @@ const MatchSlot = ({ team1_id, team2_id, team1, team2, date, stadium }) => {
           {stadium}
         </p>
         <div className="flex flex-1 min-w-0 justify-end">
-        <button className="text-white py-1 font-bold rounded-md">Reserve</button>
+          <button
+            className="text-white py-1 font-bold rounded-md"
+            onClick={handleClick}
+          >
+            Reserve
+          </button>
         </div>
       </div>
     </div>

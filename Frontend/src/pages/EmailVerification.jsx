@@ -1,6 +1,7 @@
 import { useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
+import Cookies from "js-cookie";
 import axios from "axios";
 
 const EmailVerification = () => {
@@ -19,6 +20,8 @@ const EmailVerification = () => {
           )
           .then((res) => {
             if (res.status === 200) {
+              Cookies.set("token", res.data.accessToken);
+              Cookies.set("username", res.data.username);
               setIsLoggedIn(true);
             } else {
               console.log(res);
