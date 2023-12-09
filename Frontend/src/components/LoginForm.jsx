@@ -21,6 +21,7 @@ const LoginForm = () => {
         if (res.status === 200) {
           Cookies.set("token", res.data.accessToken);
           Cookies.set("username", e.target.username.value);
+          Cookies.set("role", res.data.role);
           Cookies.set("jwt", res.data.refreshToken);
           console.log(res);
           setIsLoggedIn(true);

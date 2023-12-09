@@ -22,6 +22,7 @@ const EmailVerification = () => {
             if (res.status === 200) {
               Cookies.set("token", res.data.accessToken);
               Cookies.set("username", res.data.username);
+              Cookies.set("role", res.data.role);
               setIsLoggedIn(true);
             } else {
               console.log(res);
@@ -32,7 +33,6 @@ const EmailVerification = () => {
         console.error(error);
       }
     };
-
     verifyEmail();
   }, [token]);
 
