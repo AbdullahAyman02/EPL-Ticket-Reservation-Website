@@ -2,6 +2,8 @@ import { useParams } from "react-router-dom";
 import Lounge from "../components/Lounge";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { ReserveContextProvider } from "../contexts/ReserveContext";
+import Checkout from "../components/Checkout";
 
 const Reservation = () => {
   const { match_id } = useParams();
@@ -20,14 +22,16 @@ const Reservation = () => {
     getMatch();
   }, []);
   return (
-    <div className="flex">
-      <Lounge
-        match_id={match_id}
-        rows={match && match.stadium.no_of_rows}
-        columns={match && match.stadium.seats_per_row}
-      ></Lounge>
-      {/* <TicketInfo></TicketInfo> */}
-    </div>
+    <ReserveContextProvider>
+      <div className="flex">
+        <Lounge
+          match_id={match_id}
+          rows={match && match.stadium.no_of_rows}
+          columns={match && match.stadium.seats_per_row}
+        ></Lounge>
+        <Checkout match_id={match_id}></Checkout>
+      </div>
+    </ReserveContextProvider>
   );
 };
 

@@ -13,6 +13,7 @@ import Profile from "./pages/Profile";
 import Reservation from "./pages/Reservation";
 import Schedule from "./pages/Schedule";
 import CreateMatch from "./pages/CreateMatch";
+import MyTickets from "./pages/MyTickets";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/reservation/:match_id" element={<Reservation />} />
           <Route path="/verify/:token" element={<EmailVerification />} />
           <Route path="/match/create" element={<CreateMatch />} />
+          <Route path="/mytickets" element={<MyTickets />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

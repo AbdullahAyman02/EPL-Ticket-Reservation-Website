@@ -159,6 +159,7 @@ const handleLogin = async (req, res) => {
       status: "success",
       accessToken,
       username: userData.username,
+      role: userData.role
     });
   } catch (err) {
     res.status(401).json({
@@ -479,6 +480,7 @@ const handleVerify = async (req, res) => {
       message: "User successfully verified",
       accessToken,
       username: user.username,
+      role: user.role
     });
   } catch (err) {
     res.status(401).json({

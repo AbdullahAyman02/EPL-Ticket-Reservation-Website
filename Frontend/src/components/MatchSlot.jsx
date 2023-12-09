@@ -10,7 +10,7 @@ const MatchSlot = ({ match_id, team1_id, team2_id, team1, team2, date, stadium }
   };
   const matchDate = new Date(date);
   return (
-    <div className="m-3 bg-black bg-opacity-60 rounded-xl">
+    <div className="min-w-fit m-3 bg-black bg-opacity-60 rounded-xl">
       <div className="teams text-white flex align-middle justify-around rounded-t-md font-bold py-2">
         <div className="team-1">
           <img

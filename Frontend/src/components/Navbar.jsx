@@ -1,13 +1,14 @@
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
 import { useEffect, useContext } from "react";
-
+import { useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo.png";
 import toggleNavbar from "../scripts/toggleNavbar";
 import { AuthContext } from "../contexts/AuthContext";
 import axios from "axios";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   const handleLogout = () => {
     axios.defaults.withCredentials = true;
@@ -27,6 +28,7 @@ const Navbar = () => {
     Cookies.remove("token");
     Cookies.remove("username");
     Cookies.remove("role");
+    navigate("/");
   };
 
   useEffect(() => {
@@ -87,7 +89,7 @@ const Navbar = () => {
             </li>
             <li>
               <Link
-                to="/tickets"
+                to="/mytickets"
                 className="block py-2 px-2 rounded text-white"
               >
                 Tickets

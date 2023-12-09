@@ -1,14 +1,16 @@
-// import Seat from "../assets/fan_seat.png";
-import axios from "axios";
-import Seat from "../assets/seat1.png";
+import Selected from "../assets/seat1.png";
+import Seat from "../assets/Selected.png";
+import MySeat from "../assets/Mine.png";
 import ReservedSeat from "../assets/reserved.png";
+import axios from "axios";
 import Cookie from "js-cookie";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { checkToken } from "../scripts/checkToken";
+import { ReserveContext } from "../contexts/ReserveContext";
 
 const Lounge = ({ match_id, rows, columns }) => {
+  const { toReserve, setToReserve } = useContext(ReserveContext);
   const [arr, setArr] = useState([]);
-  console.log(match_id);
   const loadSeats = async () => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
       "token"
@@ -20,6 +22,7 @@ const Lounge = ({ match_id, rows, columns }) => {
         }/ticket/getTicketsByMatchID/${match_id}`
       )
       .then((res) => {
+        console.log(res);
         if (res.status === 200) {
           if (!rows && !columns) return;
           let seats = [];
@@ -30,10 +33,12 @@ const Lounge = ({ match_id, rows, columns }) => {
             }
           }
           for (let i = 0; i < res.data.tickets.length; i++) {
-            let seat_no = res.data.tickets[i];
+            let seat_no = res.data.tickets[i].seat_no;
             let row = Math.floor(seat_no / columns);
             let col = seat_no % columns;
-            seats[row][col] = -1;
+            if (res.data.tickets[i].username === Cookie.get("username"))
+              seats[row][col] = 2;
+            else seats[row][col] = -1;
           }
           setArr(seats);
         }
@@ -49,24 +54,30 @@ const Lounge = ({ match_id, rows, columns }) => {
   }, [rows, columns]);
 
   const reserveSeat = (i, j) => {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
-      "token"
-    )}`;
-    axios
-      .post(`${import.meta.env.VITE_BACKEND_URL}/ticket/addTicket`, {
-        match_id: match_id,
-        seat_no: i * columns + j,
-        username: Cookie.get("username"),
-      })
-      .then((res) => {
-        console.log(res);
-        if (res.status === 200) {
-          loadSeats();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setToReserve([...toReserve, i * columns + j]);
+    setArr((prev) => {
+      let newArr = [...prev];
+      newArr[i][j] = 1;
+      return newArr;
+    });
+    // axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
+    //   "token"
+    // )}`;
+    // axios
+    //   .post(`${import.meta.env.VITE_BACKEND_URL}/ticket/addTicket`, {
+    //     match_id: match_id,
+    //     seat_no: i * columns + j,
+    //     username: Cookie.get("username"),
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //     if (res.status === 200) {
+    //       loadSeats();
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   };
 
   return (
@@ -86,10 +97,20 @@ const Lounge = ({ match_id, rows, columns }) => {
                     key={j}
                     className="h-10 w-10 md:h-16 md:w-16"
                     onClick={() => {
-                      reserveSeat(i, j);
+                      if (arr[i][j] == 0) reserveSeat(i, j);
                     }}
                   >
-                    <img src={arr[i][j] != -1 ? Seat : ReservedSeat}></img>
+                    <img
+                      src={
+                        arr[i][j] == -1
+                          ? ReservedSeat
+                          : arr[i][j] == 0
+                          ? Seat
+                          : arr[i][j] == 1
+                          ? Selected
+                          : MySeat
+                      }
+                    ></img>
                   </div>
                 );
               })}

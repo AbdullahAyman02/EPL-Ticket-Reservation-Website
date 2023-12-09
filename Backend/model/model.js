@@ -227,7 +227,8 @@ const Ticket = db.define(
 User.hasMany(Ticket, { foreignKey: "username" });
 
 //match and tickets, one to many
-Match.hasMany(Ticket, { foreignKey: "match_id" });
+// Match.hasMany(Ticket, { as: 'match', foreignKey: "match_id" });
+Ticket.belongsTo(Match, { as: 'match', foreignKey: "match_id" });
 
 //match and stadium, one to one
 Match.belongsTo(Stadium, { foreignKey: "stadium_id" });
