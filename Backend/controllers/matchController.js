@@ -1,4 +1,5 @@
 import { Match, Team, Stadium, Referee } from "../model/model.js";
+import moment from 'moment';
 
 const addMatch = async (req, res) => {
   const {
@@ -112,7 +113,7 @@ const getMatchById = async (req, res) => {
     const id = req.params.id;
     try {
         const match = await Match.findOne({
-          attributes: ['id'],
+          attributes: ['id', 'date'],
           include: [
             {
               model: Team,
@@ -198,6 +199,9 @@ const editMatch = async (req, res) => {
         message: "Date must be in the future",
       });
     }
+
+    // date = moment.utc(date, "DD/MM/YYYY hh:mm").toDate();
+    // console.log(date);
     
     let match = await Match.update({
       home_team,
@@ -212,7 +216,7 @@ const editMatch = async (req, res) => {
         id: id,
       }
     });
-    res.status(201).json({
+    res.status(200).json({
         status: "success",
         match: match,
     });

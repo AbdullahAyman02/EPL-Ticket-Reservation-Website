@@ -1,12 +1,13 @@
-import Cookies from "js-cookie";
+import Cookie from "js-cookie";
 import axios from "axios";
 
 const StadiumForm = () => {
   
+  axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get("token")}`;        
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post(`${import.meta.env.VITE_BACKEND_URL}/addStadium`, {
+      .post(`${import.meta.env.VITE_BACKEND_URL}/stadium/addStadium`, {
         name: e.target.name.value,
         no_of_rows: e.target.no_of_rows.value,
         seats_per_row: e.target.seats_per_row.value,

@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookie from "js-cookie";
+import { checkToken } from "../scripts/checkToken";
 import { useState, useEffect } from "react";
 
 const MatchForm = ({add}) => {
@@ -7,6 +8,21 @@ const MatchForm = ({add}) => {
     const [stadiums, setStadiums] = useState([]);
     const [referees, setReferees] = useState([]);
     const [error, setError] = useState("");
+    const [match, setMatch] = useState([]);
+
+    useEffect(() => {
+        if (!add)
+        {
+            axios.get(`${import.meta.env.VITE_BACKEND_URL}/match/getMatchById/${window.location.pathname.split("/")[3]}`)
+            .then((res) => {
+                console.log(res);
+                setMatch(res.data.match);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        }
+    }, []);
   
     axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get("token")}`;        
     const handleSubmit = (e) => {
@@ -34,7 +50,6 @@ const MatchForm = ({add}) => {
                 away_team: e.target.away_team.value,
                 stadium_id: e.target.stadium.value,
                 date: e.target.date.value,
-                time: e.target.time.value,
                 referee_id: e.target.referee.value,
                 linesman_1: e.target.linesman1.value,
                 linesman_2: e.target.linesman2.value,
@@ -49,12 +64,12 @@ const MatchForm = ({add}) => {
         else
         {
             axios
-            .put(`${import.meta.env.VITE_BACKEND_URL}/match/updateMatch`, {
+            .put(`${import.meta.env.VITE_BACKEND_URL}/match/editMatch`, {
+                id: window.location.pathname.split("/")[3],
                 home_team: e.target.home_team.value,
                 away_team: e.target.away_team.value,
                 stadium_id: e.target.stadium.value,
                 date: e.target.date.value,
-                time: e.target.time.value,
                 referee_id: e.target.referee.value,
                 linesman_1: e.target.linesman1.value,
                 linesman_2: e.target.linesman2.value,
@@ -69,6 +84,7 @@ const MatchForm = ({add}) => {
     };
 
     useEffect(() => {
+        checkToken();
         axios.get(`${import.meta.env.VITE_BACKEND_URL}/team/getTeams`)
         .then((res) => {
             console.log(res);
@@ -80,6 +96,7 @@ const MatchForm = ({add}) => {
     }, []);
 
     useEffect(() => {
+        checkToken();
         axios.get(`${import.meta.env.VITE_BACKEND_URL}/stadium/getStadiums`)
         .then((res) => {
             setStadiums(res.data.stadiums);
@@ -90,6 +107,7 @@ const MatchForm = ({add}) => {
     }, []);
 
     useEffect(() => {
+        checkToken();
         axios.get(`${import.meta.env.VITE_BACKEND_URL}/referee/getReferees`)
         .then((res) => {
             setReferees(res.data.referees);
@@ -112,7 +130,10 @@ const MatchForm = ({add}) => {
         <div className="relative mt-5 w-full flex justify-between">
             <select
                 id="home_team"
-                className="bg-transparent w-5/12 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 peer" required>
+                className="bg-transparent w-5/12 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 peer" 
+                value={match.hometeam ? match.hometeam.id : ""}
+                onChange={(e) => setMatch({ ...match, hometeam: e.target.value })}
+                required>
                 <option value>Home Team</option>
                 {teams.map((team) => (
                 <option key={team.id} value={team.id}>{team.name}</option>
@@ -120,7 +141,10 @@ const MatchForm = ({add}) => {
             </select>
             <select
                 id="away_team"
-                className="bg-transparent w-5/12 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 peer" required>
+                className="bg-transparent w-5/12 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 peer"
+                value={match.awayteam ? match.awayteam.id : ""}
+                onChange={(e) => setMatch({ ...match, awayteam: e.target.value })}
+                required>
                 <option value>Away Team</option>
                 {teams.map((team) => (
                 <option key={team.id} value={team.id}>{team.name}</option>
@@ -135,7 +159,10 @@ const MatchForm = ({add}) => {
         <div className="relative mt-6">
             <select
                 id="stadium"
-                className="bg-transparent w-full border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 peer" required>
+                className="bg-transparent w-full border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 peer" 
+                value={match.stadium ? match.stadium.id : ""}
+                onChange={(e) => setMatch({ ...match, stadium: e.target.value })}
+                required>
                 <option value>Stadium</option>
                 {stadiums.map((stadium) => (
                 <option key={stadium.id} value={stadium.id}>{stadium.name}</option>
@@ -147,38 +174,28 @@ const MatchForm = ({add}) => {
                 Stadium
             </label>
         </div>
-        <div className="relative mt-6 w-full flex justify-between">
-            <div className="w-5/12">
-                <input
-                    type="date"
-                    id="date"
-                    className="block border border-white-300 px-2.5 pb-2.5 pt-4 text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                    required
-                />
-                <label
-                    htmlFor="date"
-                    className="absolute -top-5 left-1 text-sm text-gray-500 peer-focus:text-blue-600">
-                    Date
-                </label>
-            </div>
-            <div className="w-5/12">
-                <input
-                    type="time"
-                    id="time"
-                    className="block w-full border border-white-300 px-2.5 pb-2.5 pt-4 text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                    required
-                />
-                <label
-                    htmlFor="time"
-                    className="relative right-[4rem] bottom-[4.5rem] text-sm text-gray-500 peer-focus:text-blue-600 peer">
-                    Time
-                </label>
-            </div>
+        <div className="relative mt-6">
+            <input
+                type="datetime-local"
+                id="date"
+                className="block border border-white-300 px-2.5 pb-2.5 pt-4 text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                defaultValue={match.date ? match.date.split(".")[0].replace("T", " ") : ""}
+                onChange={(e) => setMatch({ ...match, date: e.target.value })}
+                required
+            />
+            <label
+                htmlFor="date"
+                className="absolute -top-5 left-1 text-sm text-gray-500 peer-focus:text-blue-600">
+                Date
+            </label>
         </div>
-        <div className="relative mt-1">
+        <div className="relative mt-6">
             <select
                 id="referee"
-                className="bg-transparent w-full border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 peer" required>
+                className="bg-transparent w-full border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 peer" 
+                value={match.referee ? match.referee.id : ""}
+                onChange={(e) => setMatch({ ...match, referee: e.target.value })}
+                required>
                 <option value>Main Referee</option>
                 {referees.map((referee) => (
                 <option key={referee.id} value={referee.id}>{referee.name}</option>
@@ -194,7 +211,10 @@ const MatchForm = ({add}) => {
             <div className="w-5/12">
                 <select
                     id="linesman1"
-                    className="bg-transparent w-full border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 peer" required>
+                    className="bg-transparent w-full border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 peer" 
+                    value={match.linesman1 ? match.linesman1.id : ""}
+                    onChange={(e) => setMatch({ ...match, linesman1: e.target.value })}
+                    required>
                     <option value>Linesman 1</option>
                     {referees.map((referee) => (
                     <option key={referee.id} value={referee.id}>{referee.name}</option>
@@ -209,7 +229,10 @@ const MatchForm = ({add}) => {
             <div className="w-5/12">
                 <select
                     id="linesman2"
-                    className="bg-transparent w-full border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 peer" required>
+                    className="bg-transparent w-full border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 peer" 
+                    value={match.linesman2 ? match.linesman2.id : ""}
+                    onChange={(e) => setMatch({ ...match, linesman2: e.target.value })}
+                    required>
                     <option value>Linesman 2</option>
                     {referees.map((referee) => (
                     <option key={referee.id} value={referee.id}>{referee.name}</option>
