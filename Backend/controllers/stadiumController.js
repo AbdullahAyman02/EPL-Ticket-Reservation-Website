@@ -29,7 +29,7 @@ const addStadium = async (req, res) => {
             no_of_rows,
             seats_per_row
         });
-        res.status(201).json({
+        res.status(200).json({
             status: "success",
             stadium: stadium,
         });

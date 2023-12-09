@@ -7,6 +7,9 @@ function Schedule() {
             <div className="float-right sticky mt-5 mr-5">
                 <Button text="Create Match" link="/match/create"/>
             </div>
+            <div className="float-left sticky mt-5 ml-5">
+                <Button text="Create Stadium" link="/stadium/create"/>
+            </div>
             <MatchSchedule />
         </div>
     );
