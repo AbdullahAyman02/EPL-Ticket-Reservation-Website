@@ -26,6 +26,7 @@ const Navbar = () => {
       });
     Cookies.remove("token");
     Cookies.remove("username");
+    Cookies.remove("role");
   };
 
   useEffect(() => {
@@ -92,14 +93,16 @@ const Navbar = () => {
                 Tickets
               </Link>
             </li>
-            <li>
-              <Link
-                to="/profile"
-                className="block py-2 px-2 rounded text-white"
-              >
-                Profile
-              </Link>
-            </li>
+            {Cookies.get("role") == "F" && (
+              <li>
+                <Link
+                  to="/profile"
+                  className="block py-2 px-2 rounded text-white"
+                >
+                  Profile
+                </Link>
+              </li>
+            )}
             <li className="flex flex-grow justify-center md:justify-end">
               {!isLoggedIn ? (
                 <>

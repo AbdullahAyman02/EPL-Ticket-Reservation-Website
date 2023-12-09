@@ -29,7 +29,7 @@ const addMatch = async (req, res) => {
       });
     }
     // Date must be in the future
-    const today = new Date();
+    let today = new Date().toISOString().slice(0, 10);
     if (date < today) {
       res.status(400).json({
         status: "fail",
