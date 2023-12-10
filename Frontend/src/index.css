@@ -115,3 +115,8 @@ button:focus-visible {
   background-repeat: no-repeat;
   background-position: center;
 }
+
+.dataTables_filter input, select {
+  color: black;
+  background-color: white;
+}
