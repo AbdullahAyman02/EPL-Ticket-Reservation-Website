@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import { Op } from "sequelize";
 
 dotenv.config();
 
@@ -395,7 +396,7 @@ const UpgradeUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   const { username } = req.body;
-
+  console.log(req.body);
   try {
     const user = await User.findOne({ where: { username: username } });
 
@@ -490,4 +491,31 @@ const handleVerify = async (req, res) => {
   }
 };
 
-export { handleSignup, handleLogin, handleLogout, getUserbyUsername, handleEdit, handleRefresh, UpgradeUser, deleteUser, handleVerify };
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.findAll(
+      {
+        attributes: ['username', 'role', 'email'],
+        where: {
+          role: {
+            [Op.ne]: 'A'
+          }
+        },
+      }
+    );
+    // Convert users to array of objects
+    console.log(users);
+    res.status(200).json({
+      status: "success",
+      users: users,
+    });
+  }
+  catch (err) {
+    res.status(500).json({
+      status: "fail",
+      message: err,
+    });
+  }
+}
+
+export { handleSignup, handleLogin, handleLogout, getUserbyUsername, handleEdit, handleRefresh, UpgradeUser, deleteUser, handleVerify, getAllUsers };

@@ -9,7 +9,8 @@ import {
   handleRefresh,
   UpgradeUser,
   deleteUser,
-  handleVerify
+  handleVerify,
+  getAllUsers,
 } from "../controllers/userController.js";
 
 const userRouter = Router();
@@ -25,5 +26,6 @@ userRouter.use(verifyJWT('A'));
 
 userRouter.put("/upgrade", UpgradeUser);
 userRouter.delete("/delete", deleteUser);
+userRouter.get("/getAllUsers", getAllUsers);
 
 export default userRouter;

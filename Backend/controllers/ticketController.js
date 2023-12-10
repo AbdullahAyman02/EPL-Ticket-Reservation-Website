@@ -3,9 +3,9 @@ import { Ticket } from "../model/model.js";
 import { Match } from "../model/model.js";
 import { Stadium } from "../model/model.js";
 import { Team } from "../model/model.js";
+import { Op } from "sequelize";
 
 const getTicketsByMatchID = async (req, res) => {
-    console.log("ana f getTIcketsByMatchID\n");
     try {
         // Check if match exists
         const match = await Match.findOne({
@@ -26,7 +26,7 @@ const getTicketsByMatchID = async (req, res) => {
             attributes:['seat_no', 'username'],
             where: {
                 match_id: req.params.id
-            }
+            },
         });
 
         // const seatNumbers = tickets.map(ticket => ticket.seat_no);
@@ -86,52 +86,40 @@ const addTicket = async (req, res) => {
             return;
         }
 
-        // // Check if seat number is valid
-        // const stadium = match.stadium;
-        // const no_of_rows = stadium.no_of_rows;
-        // const seats_per_row = stadium.seats_per_row;
-        // if (seat_no > no_of_rows * seats_per_row) {
-        //     res.status(409).json({
-        //         status: "fail",
-        //         message: "Invalid seat number",
-        //     });
-        //     return;
-        // }
+        console.log(match);
+        // Check if match time clashes with other matches that this user bought tickets for
+        const clashing_tickets = await Ticket.findAll({
+            where: {
+              username: username,
+              match_id: {
+                [Op.not]: match_id, // Exclude the current match
+                },
+            },
+            include:
+            [
+                {
+                    model: Match,
+                    as: 'match',
+                    attributes: ['id', 'date'],
+                    where: {
+                        date: {
+                        [Op.between]: [
+                            new Date(new Date(match_date).getTime() - 2 * 60 * 60 * 1000),
+                            new Date(new Date(match_date).getTime() + 2 * 60 * 60 * 1000),
+                            ],
+                        },
+                    },
+                },
+            ],
+          });
 
-        // // Check if seat is already taken
-        // const is_exist = await Ticket.findOne({
-        //     where: {
-        //         match_id: match_id,
-        //         seat_no: seat_no
-        //     }
-        // });
-
-        // if (is_exist) {
-        //     res.status(409).json({
-        //         status: "fail",
-        //         message: "Seat already taken",
-        //     });
-        //     return;
-        // }
-
-        // Generate a random ticket number
-        // Function to generate a more complicated and unique ticket number using only numbers
-        // Use a combination of match ID, seat number, timestamps, and random numbers
-        // get date in date format
-        // const timestamp = new Date().toISOString().slice(0, 10);
-        // const randomNumbers = Math.floor(Math.random() * 1000);
-        // const formattedMatchId = match_id.toString() + "000"; 
-        // const formattedSeatNumber = seat_no.toString() + "000";
-        // // const ticket_no = parseInt(`${formattedMatchId}${formattedSeatNumber}${timestamp}${randomNumbers}`);
-        // // const ticket_no = parseInt(`${formattedMatchId}${formattedSeatNumber}${timestamp}`);
-        // const ticket_no = parseInt(`${formattedMatchId}${formattedSeatNumber}`);
-
-        // const ticket = await Ticket.create({
-        //     ticket_no,
-        //     match_id,
-        //     seat_no,
-        //     username
-        // });
+        if (clashing_tickets.length > 0) {
+            res.status(409).json({
+                status: "fail",
+                message: "You already have a ticket for a match that clashes with this match",
+            });
+            return;
+        }
 
         // Generate ticket numbers for each seat_no
         const formattedMatchId = match_id.toString() + "000";
@@ -198,7 +186,6 @@ const deleteTicket = async (req, res) => {
 }
 
 const getTicketsByUsername = async (req, res) => {
-    console.log("ana f getTicketsByUsername\n");
     try {
         // Merge tickets with match table
         const tickets = await Ticket.findAll({
@@ -227,8 +214,16 @@ const getTicketsByUsername = async (req, res) => {
                 },
             ],
             where: {
-                username: req.params.username
-            }
+                username: req.params.username,
+                // the ticket is for a match that has not been played yet
+                [Op.and]: [
+                    { '$match.date$': { [Op.gte]: new Date() } },
+                ],
+            },
+            // sort the tickets according to the match date
+            order: [
+                [{ model: Match, as: 'match' }, 'date', 'ASC'],
+            ],
         });
         console.log(tickets);
         res.status(200).json({

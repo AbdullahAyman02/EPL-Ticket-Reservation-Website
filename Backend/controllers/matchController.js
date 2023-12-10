@@ -1,5 +1,5 @@
 import { Match, Team, Stadium, Referee } from "../model/model.js";
-import moment from 'moment';
+import { Op } from 'sequelize';
 
 const addMatch = async (req, res) => {
   const {
@@ -94,6 +94,15 @@ const getMatches = async (req, res) => {
           as: 'linesman2',
           attributes: ['id', 'name'],
         },
+      ],
+      where: {
+        date: {
+          [Op.gte]: new Date(),
+        }
+      },
+      // sort the matches by date
+      order: [
+        ['date', 'ASC'],
       ],
     });
     res.status(200).json({
@@ -199,9 +208,6 @@ const editMatch = async (req, res) => {
         message: "Date must be in the future",
       });
     }
-
-    // date = moment.utc(date, "DD/MM/YYYY hh:mm").toDate();
-    // console.log(date);
     
     let match = await Match.update({
       home_team,
