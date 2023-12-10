@@ -6,12 +6,13 @@ export const checkToken = async () => {
   const token = Cookie.get("token");
   if (jwtDecode(token).exp < Date.now() / 1000) {
     axios.defaults.withCredentials = true;
-    await axios
+    const response = await axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/user/refresh`)
       .then((res) => {
         if (res.status === 200) {
           Cookie.set("token", res.data.accessToken);
           console.log("Token refreshed");
+          window.location.reload();
         } else {
           Cookie.remove("token");
           window.location.href = "/login";
@@ -20,6 +21,7 @@ export const checkToken = async () => {
       .catch((err) => {
         console.log(err);
       });
+    console.log(response);
   }
 };
 export default checkToken;

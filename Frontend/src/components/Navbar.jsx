@@ -105,6 +105,16 @@ const Navbar = () => {
                 </Link>
               </li>
             )}
+            {Cookies.get("role") == "A" && (
+              <li>
+                <Link
+                  to="/admin"
+                  className="block py-2 px-2 rounded text-white"
+                >
+                  Dashboard
+                </Link>
+              </li>
+            )}
             <li className="flex flex-grow justify-center md:justify-end">
               {!isLoggedIn ? (
                 <>

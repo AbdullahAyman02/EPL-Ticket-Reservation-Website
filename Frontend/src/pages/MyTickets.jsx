@@ -40,6 +40,8 @@ const MyTickets = () => {
             date={ticket.match.date}
             seat_no={ticket.seat_no}
             stadium={ticket.match.stadium.name}
+            tickets={tickets}
+            setTickets={setTickets}
           />
         ))}
     </div>

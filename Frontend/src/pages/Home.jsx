@@ -1,11 +1,11 @@
 import Hero from "../components/Hero";
-import MatchSchedule from "../components/MatchSchedule";
+// import MatchSchedule from "../components/MatchSchedule";
 
 const Home = () => {
   return (
     <>
       <Hero></Hero>
-      <MatchSchedule></MatchSchedule>
+      {/* <MatchSchedule></MatchSchedule> */}
     </>
   );
 };
