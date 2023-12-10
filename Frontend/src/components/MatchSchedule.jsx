@@ -19,7 +19,7 @@ const MatchSchedule = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto  max-h-[80vh] overflow-scroll no-scrollbar">
+    <div className="max-w-4xl mx-auto overflow-scroll no-scrollbar">
       {matches &&
         matches.map((match) => (
           <MatchSlot
