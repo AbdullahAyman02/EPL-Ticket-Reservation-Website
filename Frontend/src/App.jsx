@@ -16,6 +16,7 @@ import CreateMatch from "./pages/CreateMatch";
 import EditMatch from "./pages/EditMatch";
 import CreateStadium from "./pages/CreateStadium";
 import MyTickets from "./pages/MyTickets";
+import Admin from "./pages/Admin";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="/mytickets" element={<MyTickets />} />
           <Route path="/match/update/:match_id" element={<EditMatch />} />
           <Route path="/stadium/create" element={<CreateStadium />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
