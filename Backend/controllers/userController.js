@@ -367,7 +367,7 @@ const SendEmail = async (req, res) => {
 };
 
 const UpgradeUser = async (req, res) => {
-  const { username } = req.body;
+  const { username } = req.body.data;
 
   try {
     const user = await User.findOne({ where: { username: username } });
@@ -378,7 +378,6 @@ const UpgradeUser = async (req, res) => {
         message: "User does not exist",
       });
     }
-
     user.role = 'M';
     user.save();
 
@@ -387,7 +386,8 @@ const UpgradeUser = async (req, res) => {
       message: "User successfully upgraded",
     });
   } catch (err) {
-    res.status(401).json({
+    console.log(err)
+    res.status(500).json({
       status: "fail",
       message: err,
     });
@@ -504,7 +504,7 @@ const getAllUsers = async (req, res) => {
       }
     );
     // Convert users to array of objects
-    console.log(users);
+    // console.log(users);
     res.status(200).json({
       status: "success",
       users: users,

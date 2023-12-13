@@ -29,6 +29,28 @@ const Table = ({ data, setDataSet }) => {
         });
     };
 
+    const upgradeUser = (username) => {
+      // Implement your logic to handle the upgrade action
+      checkToken();
+      console.log(username);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
+        "token"
+      )}`;
+      axios
+        .put(`${import.meta.env.VITE_BACKEND_URL}/user/upgrade`, {
+          data: { username: username },
+        })
+        .then((res) => {
+          setDataSet(data.filter((user) => user.username !== username));
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    const isFan = (role) => role === 'F';
+
     const table = $(tableRef.current).DataTable({
       data: data,
       columns: [
@@ -44,7 +66,13 @@ const Table = ({ data, setDataSet }) => {
       columnDefs: [
         {
           data: null,
-          defaultContent: `<button class="bg-red-600 text-white px-2 py-1 rounded-md hover:bg-red-900">Delete</button>`,
+          render: function (data, type, row) {
+            const username = row[0];
+            const role = row[1];
+
+            return `<button class="bg-red-600 text-white px-2 py-1 rounded-md hover:bg-red-900 mr-2">Delete</button>
+                    ${isFan(role) ? `<button class="bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-900">Upgrade</button>` : ''}`;
+          },
           targets: -1,
         },
       ],
@@ -52,9 +80,15 @@ const Table = ({ data, setDataSet }) => {
     });
 
     table.on("click", "button", function (e) {
-      let data = table.row(e.target.closest("tr")).data();
-      console.log(data);
-      if (data) deleteUser(data[0]);
+      let rowData = table.row(e.target.closest("tr")).data();
+      if (rowData) {
+        const username = rowData[0];
+        if (e.target.textContent === "Delete") {
+          deleteUser(username);
+        } else if (e.target.textContent === "Upgrade") {
+          upgradeUser(username);
+        }
+      }
     });
 
     return function () {
