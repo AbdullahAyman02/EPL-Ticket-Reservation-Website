@@ -12,7 +12,7 @@ const matchRouter = Router();
 matchRouter.get("/getMatches", getMatches);
 matchRouter.get("/getMatchById/:id", getMatchById);
 
-matchRouter.use(verifyJWT('M'));
+matchRouter.use(verifyJWT(['M']));
 
 matchRouter.post("/addMatch", addMatch);
 matchRouter.put("/editMatch", editMatch);

@@ -6,7 +6,7 @@ import {
 
 const refereeRouter = Router();
 
-refereeRouter.use(verifyJWT('M'));
+refereeRouter.use(verifyJWT(['M']));
 refereeRouter.get("/getReferees", getReferees);
 
 export default refereeRouter;

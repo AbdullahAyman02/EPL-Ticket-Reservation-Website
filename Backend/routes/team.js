@@ -6,7 +6,7 @@ import {
 
 const teamRouter = Router();
 
-teamRouter.use(verifyJWT('M'));
+teamRouter.use(verifyJWT(['M']));
 teamRouter.get("/getTeams", getTeams);
 
 export default teamRouter;

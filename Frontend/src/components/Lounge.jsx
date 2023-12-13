@@ -97,7 +97,7 @@ const Lounge = ({ match_id, rows, columns }) => {
                     key={j}
                     className="h-10 w-10 md:h-16 md:w-16"
                     onClick={() => {
-                      if (arr[i][j] == 0) reserveSeat(i, j);
+                      if (arr[i][j] == 0 && Cookie.get("role") == 'F') reserveSeat(i, j);
                     }}
                   >
                     <img

@@ -8,7 +8,7 @@ import {
 
 const stadiumRouter = Router();
 
-stadiumRouter.use(verifyJWT('M'));
+stadiumRouter.use(verifyJWT(['M']));
 stadiumRouter.get("/getStadiums", getStadiums);
 stadiumRouter.post("/addStadium", addStadium);
 

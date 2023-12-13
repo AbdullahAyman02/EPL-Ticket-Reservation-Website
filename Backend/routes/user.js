@@ -22,7 +22,7 @@ userRouter.put("/edit", handleEdit);
 userRouter.get("/refresh", handleRefresh);
 userRouter.get("/verify/:token", handleVerify);
 
-userRouter.use(verifyJWT('A'));
+userRouter.use(verifyJWT(['A']));
 
 userRouter.put("/upgrade", UpgradeUser);
 userRouter.delete("/delete", deleteUser);
