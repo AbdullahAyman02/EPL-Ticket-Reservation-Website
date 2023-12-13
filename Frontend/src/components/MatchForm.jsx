@@ -8,6 +8,7 @@ const MatchForm = ({add}) => {
     const [stadiums, setStadiums] = useState([]);
     const [referees, setReferees] = useState([]);
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
     const [match, setMatch] = useState([]);
 
     useEffect(() => {
@@ -29,17 +30,20 @@ const MatchForm = ({add}) => {
         e.preventDefault();
         if (e.target.home_team.value === e.target.away_team.value)
         {
-            setError("Home team and away team can't be the same")            
+            setError("Home team and away team can't be the same")     
+            setSuccess("");       
             return;
         }
         if (e.target.referee.value === e.target.linesman1.value || e.target.referee.value === e.target.linesman2.value)
         {
             setError("Referee can't be a linesman");
+            setSuccess("");
             return;
         }
         if (e.target.linesman1.value === e.target.linesman2.value)
         {
             setError("Linesman 1 and linesman 2 can't be the same");
+            setSuccess("");
             return;
         }
         if (add)
@@ -56,9 +60,13 @@ const MatchForm = ({add}) => {
             })
             .then((res) => {
                 console.log(res.data);
+                //display a success message
+                setSuccess("Match added successfully");
+                setError("");
             })
             .catch((err) => {
                 setError(err.response.data.message);
+                setSuccess(""); 
             });
         }
         else
@@ -75,10 +83,13 @@ const MatchForm = ({add}) => {
                 linesman_2: e.target.linesman2.value,
             })
             .then((res) => {
+                setSuccess("Match updated successfully");
+                setError("");
                 console.log(res);
             })
             .catch((err) => {
                 setError(err.response.data.message);
+                setSuccess("");
             });
         }
     };
@@ -125,6 +136,13 @@ const MatchForm = ({add}) => {
             <strong className="font-bold">Error!</strong>
             <br />
             <span className="block sm:inline"> {error}</span>
+          </div>
+        )}
+        {success && (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+            <strong className="font-bold">Success!</strong>
+            <br />
+            <span className="block sm:inline"> {success}</span>
           </div>
         )}
         <div className="relative mt-5 w-full flex justify-between">

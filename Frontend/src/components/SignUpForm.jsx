@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 const SignUpForm = ({ add }) => {
   const [cities, setCities] = useState([]);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const SignUpForm = ({ add }) => {
     e.preventDefault();
     if (e.target.password.value !== e.target.confirm_password.value) {
       setError("Passwords don't match")
+      setSuccess("");
       return;
     }
     if (add) {
@@ -50,12 +52,15 @@ const SignUpForm = ({ add }) => {
           if (res.status === 200) {
             Cookies.set("username", e.target.username.value);
             console.log(Cookies.get("token"));
+            setSuccess("Signed Up Successfully! Check your email for the verification link");
+            setError("");
           } else {
             alert(res.data.data);        
           }
         })
         .catch((err) => {
-          setError(err.response.data.message)        
+          setError(err.response.data.message) 
+          setSuccess("");       
         });
     } else {
       axios
@@ -70,10 +75,13 @@ const SignUpForm = ({ add }) => {
           address: e.target.address.value,
         })
         .then((res) => {
+          setSuccess("Data Updated Successfully!");
+          setError("");
           console.log(res);
         })
         .catch((err) => {
           setError(err.response.data.message);
+          setSuccess("");
         });
     }
   };
@@ -97,6 +105,13 @@ const SignUpForm = ({ add }) => {
             <strong className="font-bold">Error!</strong>
             <br />
             <span className="block sm:inline"> {error}</span>
+          </div>
+        )}
+        {success && (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+            <strong className="font-bold">Success!</strong>
+            <br />
+            <span className="block sm:inline"> {success}</span>
           </div>
         )}
         {add && (

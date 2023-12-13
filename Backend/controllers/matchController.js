@@ -15,15 +15,14 @@ const addMatch = async (req, res) => {
   try{
     // Home team and away team must be different
     if (home_team === away_team) {
-      res.status(400).json({
+      return res.status(400).json({
         status: "fail",
         message: "Home team and away team must be different",
       });
     }
     // Must be 3 different referees
     if (referee_id === linesman_1 || referee_id === linesman_2 || linesman_1 === linesman_2) {
-      console.log(referee_id, linesman_1, linesman_2);
-      res.status(400).json({
+      return res.status(400).json({
         status: "fail",
         message: "Must be 3 different referees",
       });
@@ -31,7 +30,7 @@ const addMatch = async (req, res) => {
     // Date must be in the future
     let today = new Date().toISOString().slice(0, 10);
     if (date < today) {
-      res.status(400).json({
+      return res.status(400).json({
         status: "fail",
         message: "Date must be in the future",
       });
@@ -188,14 +187,14 @@ const editMatch = async (req, res) => {
   try{
     // Home team and away team must be different
     if (home_team === away_team) {
-      res.status(400).json({
+      return res.status(400).json({
         status: "fail",
         message: "Home team and away team must be different",
       });
     }
     // Must be 3 different referees
     if (referee_id === linesman_1 || referee_id === linesman_2 || linesman_1 === linesman_2) {
-      res.status(400).json({
+      return res.status(400).json({
         status: "fail",
         message: "Must be 3 different referees",
       });
@@ -203,7 +202,7 @@ const editMatch = async (req, res) => {
     // Date must be in the future
     const today = new Date();
     if (date < today) {
-      res.status(400).json({
+      return res.status(400).json({
         status: "fail",
         message: "Date must be in the future",
       });

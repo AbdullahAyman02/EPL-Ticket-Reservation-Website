@@ -87,14 +87,16 @@ const Navbar = () => {
                 Match Schedule
               </Link>
             </li>
-            <li>
-              <Link
-                to="/mytickets"
-                className="block py-2 px-2 rounded text-white"
-              >
-                Tickets
-              </Link>
-            </li>
+            {Cookies.get("role") == "F" && (
+              <li>
+                <Link
+                  to="/mytickets"
+                  className="block py-2 px-2 rounded text-white"
+                >
+                  Tickets
+                </Link>
+              </li>
+            )}
             {Cookies.get("role") == "F" && (
               <li>
                 <Link

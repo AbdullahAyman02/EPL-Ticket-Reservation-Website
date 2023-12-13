@@ -27,10 +27,12 @@ const Checkout = ({ match_id }) => {
                 if (res.status === 200) {
                   setToReserve([]);
                   console.log("successfully reserved");
+                  alert("Successfully reserved");
                 }
               })
               .catch((err) => {
                 console.log(err);
+                alert(err.response.data.message)
               });
           }}
         >

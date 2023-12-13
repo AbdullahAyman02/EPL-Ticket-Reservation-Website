@@ -122,9 +122,9 @@ const addTicket = async (req, res) => {
         }
 
         // Generate ticket numbers for each seat_no
-        const formattedMatchId = match_id.toString() + "000";
+        const formattedMatchId = match_id.toString() + "00";
         const tickets = seat_no.map(seat_no => {
-            const formattedSeatNumber = seat_no.toString() + "000";
+            const formattedSeatNumber = seat_no.toString() + "00";
             const ticket_no = parseInt(`${formattedMatchId}${formattedSeatNumber}`);
             return {
                 ticket_no,

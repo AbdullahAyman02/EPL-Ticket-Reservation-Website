@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDay, faFutbol } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 // eslint-disable-next-line react/prop-types
 const MatchSlot = ({
@@ -13,8 +14,9 @@ const MatchSlot = ({
   stadium,
 }) => {
   const navigate = useNavigate();
-  const handleClick = () => {
-    navigate(`/reservation/${match_id}`);
+  const role = Cookies.get("role");
+  const handleClick = (path) => {
+    navigate(path);
   };
   const matchDate = new Date(date);
   const currDate = new Date();
@@ -49,13 +51,30 @@ const MatchSlot = ({
           {stadium}
         </p>
         <div className="flex flex-1 min-w-0 justify-end">
-          <button
-            // style={{ visibility: matchDate < currDate ? "hidden" : "visible" }}
-            className="text-white py-1 font-bold rounded-md"
-            onClick={handleClick}
-          >
-            Reserve
-          </button>
+        {role === "F" && (
+            <button
+              className="text-white py-1 font-bold rounded-md"
+              onClick={() => handleClick(`/reservation/${match_id}`)}
+            >
+              Reserve
+            </button>
+          )}
+          {role === "M" && (
+            <button
+              className="text-white py-1 font-bold rounded-md"
+              onClick={() => handleClick(`/match/update/${match_id}`)}
+            >
+              Edit Match
+            </button>
+          )}
+          {role === "M" && (
+            <button
+              className="text-white py-1 font-bold rounded-md"
+              onClick={() => handleClick(`/reservation/${match_id}`)}
+            >
+              Seat status
+            </button>
+          )}
         </div>
       </div>
     </div>
