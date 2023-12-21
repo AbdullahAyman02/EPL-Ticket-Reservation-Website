@@ -31,7 +31,7 @@ const SignUpForm = ({ add }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (e.target.password.value !== e.target.confirm_password.value) {
-      setError("Passwords don't match")
+      setError("Passwords don't match");
       setSuccess("");
       return;
     }
@@ -52,15 +52,17 @@ const SignUpForm = ({ add }) => {
           if (res.status === 200) {
             Cookies.set("username", e.target.username.value);
             console.log(Cookies.get("token"));
-            setSuccess("Signed Up Successfully! Check your email for the verification link");
+            setSuccess(
+              "Signed Up Successfully! Check your email for the verification link"
+            );
             setError("");
           } else {
-            alert(res.data.data);        
+            alert(res.data.data);
           }
         })
         .catch((err) => {
-          setError(err.response.data.message) 
-          setSuccess("");       
+          setError(err.response.data.message);
+          setSuccess("");
         });
     } else {
       axios
@@ -98,7 +100,7 @@ const SignUpForm = ({ add }) => {
   }, []);
 
   return (
-    <div className="mt-3 w-3/12 min-w-fit">
+    <div className="w-3/12 min-w-fit mt-10">
       <form onSubmit={handleSubmit}>
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">

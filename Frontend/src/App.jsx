@@ -17,6 +17,7 @@ import EditMatch from "./pages/EditMatch";
 import CreateStadium from "./pages/CreateStadium";
 import MyTickets from "./pages/MyTickets";
 import Admin from "./pages/Admin";
+import { SocketContextProvider } from "./contexts/SocketContext";
 
 function App() {
   return (
@@ -29,7 +30,14 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/reservation/:match_id" element={<Reservation />} />
+          <Route
+            path="/reservation/:match_id"
+            element={
+              <SocketContextProvider>
+                <Reservation />
+              </SocketContextProvider>
+            }
+          />
           <Route path="/verify/:token" element={<EmailVerification />} />
           <Route path="/match/create" element={<CreateMatch />} />
           <Route path="/mytickets" element={<MyTickets />} />

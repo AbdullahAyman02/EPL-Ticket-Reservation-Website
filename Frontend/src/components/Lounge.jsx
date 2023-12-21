@@ -7,10 +7,41 @@ import Cookie from "js-cookie";
 import { useEffect, useState, useContext } from "react";
 import { checkToken } from "../scripts/checkToken";
 import { ReserveContext } from "../contexts/ReserveContext";
+import { SocketContext } from "../contexts/SocketContext";
 
 const Lounge = ({ match_id, rows, columns }) => {
   const { toReserve, setToReserve } = useContext(ReserveContext);
+  const { socket } = useContext(SocketContext);
   const [arr, setArr] = useState([]);
+
+  useEffect(() => {
+    console.log(arr);
+  }, [arr]);
+
+  socket.current.on("reserve", (data) => {
+    console.log(data);
+    console.log(arr);
+    if (data.match_id === match_id) {
+      setToReserve((reserve) => {
+        let copy = [...reserve];
+        for (let i = 0; i < data.seat_no.length; i++) {
+          copy = copy.filter((item) => item != data.seat_no[i]);
+        }
+        return copy;
+      });
+      setArr((prev) => {
+        let newArr = [...prev];
+        for (let i = 0; i < data.seat_no.length; i++) {
+          let row = Math.floor(data.seat_no[i] / newArr[0].length);
+          let col = data.seat_no[i] % newArr[0].length;
+          console.log(row, col);
+          newArr[row][col] = data.username == Cookie.get("username") ? 2 : -1;
+        }
+        return newArr;
+      });
+    }
+  });
+
   const loadSeats = async () => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
       "token"
@@ -54,30 +85,23 @@ const Lounge = ({ match_id, rows, columns }) => {
   }, [rows, columns]);
 
   const reserveSeat = (i, j) => {
-    setToReserve([...toReserve, i * columns + j]);
+    console.log(i, j);
+    setToReserve((reserve) => {
+      let copy = [...reserve];
+      if (arr[i][j] == 0) {
+        console.log("Selected");
+        copy = [...copy, i * columns + j];
+      } else {
+        console.log("Unselected");
+        copy = copy.filter((item) => item != i * columns + j);
+      }
+      return copy;
+    });
     setArr((prev) => {
       let newArr = [...prev];
-      newArr[i][j] = 1;
+      newArr[i][j] = newArr[i][j] ? 0 : 1;
       return newArr;
     });
-    // axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
-    //   "token"
-    // )}`;
-    // axios
-    //   .post(`${import.meta.env.VITE_BACKEND_URL}/ticket/addTicket`, {
-    //     match_id: match_id,
-    //     seat_no: i * columns + j,
-    //     username: Cookie.get("username"),
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //     if (res.status === 200) {
-    //       loadSeats();
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
   };
 
   return (
@@ -97,7 +121,11 @@ const Lounge = ({ match_id, rows, columns }) => {
                     key={j}
                     className="h-10 w-10 md:h-16 md:w-16"
                     onClick={() => {
-                      if (arr[i][j] == 0 && Cookie.get("role") == 'F') reserveSeat(i, j);
+                      if (
+                        (arr[i][j] == 0 || arr[i][j] == 1) &&
+                        Cookie.get("role") == "F"
+                      )
+                        reserveSeat(i, j);
                     }}
                   >
                     <img

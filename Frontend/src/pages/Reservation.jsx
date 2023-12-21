@@ -1,11 +1,13 @@
 import { useParams } from "react-router-dom";
 import Lounge from "../components/Lounge";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { SocketContext } from "../contexts/SocketContext";
 import axios from "axios";
 import { ReserveContextProvider } from "../contexts/ReserveContext";
 import Checkout from "../components/Checkout";
 
 const Reservation = () => {
+  const { socket } = useContext(SocketContext);
   const { match_id } = useParams();
   const [match, setMatch] = useState(null);
 
@@ -20,7 +22,12 @@ const Reservation = () => {
   };
   useEffect(() => {
     getMatch();
-  }, []);
+    socket.current.connect();
+    console.log(socket.current);
+    socket.current.on("connect", () => {
+      console.log(`Connected to server as: ${socket.current.id}`);
+    });
+  }, [socket]);
   return (
     <ReserveContextProvider>
       <div className="flex">

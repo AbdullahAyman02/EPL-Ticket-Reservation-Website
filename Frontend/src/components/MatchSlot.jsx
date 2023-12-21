@@ -19,11 +19,10 @@ const MatchSlot = ({
     navigate(path);
   };
   const matchDate = new Date(date);
-  const currDate = new Date();
   return (
     <div className="min-w-fit m-3 bg-black bg-opacity-60 rounded-xl">
       <div className="teams text-white flex align-middle justify-around rounded-t-md font-bold py-2">
-        <div className="team-1">
+        <div className="team-1 flex flex-col justify-center align-middle">
           <img
             className="max-w-[100px]"
             src={`https://media.api-sports.io/football/teams/${team1_id}.png`}
@@ -51,7 +50,7 @@ const MatchSlot = ({
           {stadium}
         </p>
         <div className="flex flex-1 min-w-0 justify-end">
-        {role === "F" && (
+          {role === "F" && (
             <button
               className="text-white py-1 font-bold rounded-md"
               onClick={() => handleClick(`/reservation/${match_id}`)}

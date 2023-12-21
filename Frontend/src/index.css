@@ -116,7 +116,15 @@ button:focus-visible {
   background-position: center;
 }
 
-.dataTables_filter input, select {
+.dataTables_filter input,
+select {
   color: black;
   background-color: white;
+}
+
+form {
+  padding: 1em;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 0 1em #00000033;
 }

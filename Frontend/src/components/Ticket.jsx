@@ -2,6 +2,7 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import Cookie from "js-cookie";
+import checkToken from "../scripts/checkToken";
 
 const Ticket = ({
   ticket_no,
@@ -16,6 +17,7 @@ const Ticket = ({
   setTickets,
 }) => {
   const handleClick = () => {
+    checkToken();
     axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
       "token"
     )}`;

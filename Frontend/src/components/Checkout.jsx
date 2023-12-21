@@ -1,12 +1,15 @@
 import { ReserveContext } from "../contexts/ReserveContext";
+import { SocketContext } from "../contexts/SocketContext";
 import { useContext } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
 
 const Checkout = ({ match_id }) => {
   const { toReserve, setToReserve } = useContext(ReserveContext);
+  const { socket } = useContext(SocketContext);
   const role = Cookie.get("role");
-  return role == 'F' && (
+  return (
+    role == "F" && (
       <div className="flex flex-col items-center">
         <h1 className="text-2xl font-bold">Checkout</h1>
         <div className="flex flex-col items-center">
@@ -14,6 +17,10 @@ const Checkout = ({ match_id }) => {
           <button
             className="bg-green-500 text-white px-4 py-2 rounded"
             onClick={() => {
+              if (toReserve.length == 0) {
+                alert("Please select a seat");
+                return;
+              }
               axios.defaults.headers.common[
                 "Authorization"
               ] = `Bearer ${Cookie.get("token")}`;
@@ -26,14 +33,20 @@ const Checkout = ({ match_id }) => {
                 .then((res) => {
                   console.log(res);
                   if (res.status === 200) {
-                    setToReserve([]);
                     console.log("successfully reserved");
                     alert("Successfully reserved");
+                    console.log(socket.current);
+                    socket.current.emit("reserve", {
+                      username: Cookie.get("username"),
+                      match_id: match_id,
+                      seat_no: toReserve,
+                    });
+                    setToReserve([]);
                   }
                 })
                 .catch((err) => {
                   console.log(err);
-                  alert(err.response.data.message)
+                  alert(err.response.data.message);
                 });
             }}
           >
@@ -41,6 +54,7 @@ const Checkout = ({ match_id }) => {
           </button>
         </div>
       </div>
+    )
   );
 };
 

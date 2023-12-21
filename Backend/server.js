@@ -10,6 +10,8 @@ import stadiumRouter from "./routes/stadium.js";
 import ticketRouter from "./routes/ticket.js";
 import verifyJWT from './middleware/verifyJWT.js'
 import cors from 'cors'
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 dotenv.config();
 var corsOptions = {
@@ -28,6 +30,13 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookies());
+const server = createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:5173",
+        methods: ["GET", "POST"],
+    }, // Set CORS options directly here
+});
 
 app.use("/user", userRouter); //localhost:5000/user/login
 app.use("/match", matchRouter);
@@ -42,6 +51,18 @@ app.get('/', (req, res) => {
     res.send('Hello World, ' + req.username)
 });
 
+io.on('connection', async (socket) => {
+    console.log('a user connected');
+    socket.on('reserve', async (msg) => {
+        console.log('----------------------------------reserve----------------------------------');
+        console.log(msg);
+        io.emit('reserve', msg);
+    });
+    socket.on('disconnect', async () => {
+        console.log('user disconnected')
+    });
+});
+
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, console.log(`Server started on port ${PORT}`));
+server.listen(PORT, console.log(`Server started on port ${PORT}`));
