@@ -1,4 +1,4 @@
-import { Route, Router } from "express";
+import { Router } from "express";
 import verifyJWT  from "../middleware/verifyJWT.js";
 import {
   handleSignup,

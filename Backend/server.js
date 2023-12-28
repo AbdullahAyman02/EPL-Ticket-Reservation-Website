@@ -8,7 +8,6 @@ import refereeRouter from "./routes/referee.js";
 import teamRouter from "./routes/team.js";
 import stadiumRouter from "./routes/stadium.js";
 import ticketRouter from "./routes/ticket.js";
-import verifyJWT from './middleware/verifyJWT.js'
 import cors from 'cors'
 import { createServer } from "http";
 import { Server } from "socket.io";

@@ -5,11 +5,6 @@ const User = db.define(
   "user",
   {
     // attributes
-    // id: {
-      // type: Sequelize.INTEGER,
-      // autoIncrement: true,
-      // primaryKey: true,
-    // },
     username: {
       type: Sequelize.STRING,
       allowNull: false,
@@ -154,11 +149,7 @@ const Team = db.define(
     name: {
       type: Sequelize.STRING,
       allowNull: false,
-    },
-    // founded: {
-    //   type: Sequelize.DATE,
-    //   allowNull: false,
-    // },
+    }, 
   },
   {
     createdAt: false,
@@ -178,10 +169,6 @@ const Referee = db.define(
       type: Sequelize.STRING,
       allowNull: false,
     },
-    // age: {
-    //   type: Sequelize.INTEGER,
-    //   allowNull: false,
-    // },
   },
   {
     createdAt: false,
