@@ -1,11 +1,5 @@
 const Hero = () => {
   return (
-    // <div
-    //   id="hero"
-    //   className="flex justify-center align-middle h-[92vh] items-center text-white"
-    // >
-    //   <h1 className="text-7xl">Welcome to EPL</h1>
-    // </div>
     <>
       <div
         style={{ padding: "56.25% 0 0 0", position: "relative", zIndex: -1 }}

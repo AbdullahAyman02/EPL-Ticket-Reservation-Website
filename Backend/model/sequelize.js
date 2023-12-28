@@ -9,7 +9,8 @@ const db = new Sequelize(process.env.DB_URL, {
             require: true,
             rejectUnauthorized: false
         }
-    }
+    },
+    timezone: '+02:00', // Set the timezone to UTC
 });
 
 export default db;

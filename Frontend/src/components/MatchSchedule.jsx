@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 const MatchSchedule = () => {
   const [matches, setMatches] = useState([]);
-
   useEffect(() => {
     const fetchMatches = async () => {
       axios
@@ -31,6 +30,9 @@ const MatchSchedule = () => {
             team2={match.awayteam.name}
             date={match.date}
             stadium={match.stadium.name}
+            referee={match.referee.name}
+            linesman1={match.linesman1.name}
+            linesman2={match.linesman2.name}
           />
         ))}
     </div>

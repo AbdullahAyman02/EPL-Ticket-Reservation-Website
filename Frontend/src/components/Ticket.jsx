@@ -38,7 +38,7 @@ const Ticket = ({
   const maxDelete = new Date(date);
   maxDelete.setDate(matchDate.getDate() - 3);
   return (
-    <div className=" min-w-fit w-2/3 mt-2">
+    <div className=" min-w-fit w-2/3 mt-8">
       <h1 className="bg-blue-950 p-3 rounded-t-md">
         Ticket
         <FontAwesomeIcon
@@ -54,18 +54,18 @@ const Ticket = ({
         <p>Match Date: {matchDate.toDateString()}</p>
         <p>Stadium: {stadium}</p>
         <div className="flex justify-around">
-          <div>
+          <div className="flex flex-col h-full justify-between align-middle">
             <img
-              className="max-w-[100px]"
+              className="max-w-[100px]  m-auto"
               src={`https://media.api-sports.io/football/teams/${team1_id}.png`}
               alt=""
             />
             <h3>{team1}</h3>
           </div>
           <p className="my-auto text-4xl">vs</p>
-          <div>
+          <div className="flex flex-col justify-center align-text-bottom">
             <img
-              className="max-w-[100px]"
+              className="max-w-[100px] m-auto"
               src={`https://media.api-sports.io/football/teams/${team2_id}.png`}
               alt=""
             />

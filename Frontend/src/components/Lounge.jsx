@@ -105,13 +105,13 @@ const Lounge = ({ match_id, rows, columns }) => {
   };
 
   return (
-    <div id="lounge" className="w-full py-8">
-      <div className="flex flex-row flex-wrap justify-center items-center w-full">
+    <div id="lounge" className="py-4 px-2 md:py-8 md:px-10 grow">
+      <div className="flex flex-col align-middle md:flex-wrap justify-center items-center">
         {arr.map((row, i) => {
           return (
             <div
               key={i}
-              className={`flex flex-wrap justify-center items-center h-12 w-full -translate-y-[${
+              className={`flex flex-wrap justify-center items-center md:h-12 -translate-y-[${
                 i * 22
               }px]`}
             >
@@ -119,7 +119,7 @@ const Lounge = ({ match_id, rows, columns }) => {
                 return (
                   <div
                     key={j}
-                    className="h-10 w-10 md:h-16 md:w-16"
+                    className="h-5 w-5 sm:h-8 sm:w-8 md:h-10 md:w-10 3xl:h-24 3xl:w-24"
                     onClick={() => {
                       if (
                         (arr[i][j] == 0 || arr[i][j] == 1) &&
