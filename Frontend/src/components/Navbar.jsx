@@ -73,7 +73,7 @@ const Navbar = () => {
           </svg>
         </button>
         <div className="wrapper w-full lg:grid-rows-1" id="navbar-default">
-          <ul className="inner font-medium flex flex-col w-full px-4 rounded-lg md:flex-row md:space-x-8 md:mt-0">
+          <ul className="inner font-medium flex flex-col w-full px-4 rounded-lg md:flex-row md:space-x-8 md:mt-10 lg:mt-0">
             <li>
               <Link to="/" className="block py-2 px-2 rounded text-white">
                 Home

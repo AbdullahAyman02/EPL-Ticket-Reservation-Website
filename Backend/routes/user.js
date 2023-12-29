@@ -11,6 +11,9 @@ import {
   deleteUser,
   handleVerify,
   getAllUsers,
+  cancelRequest,
+  rejectRequest,
+  sendRequest,
 } from "../controllers/userController.js";
 
 const userRouter = Router();
@@ -22,8 +25,12 @@ userRouter.put("/edit", handleEdit);
 userRouter.get("/refresh", handleRefresh);
 userRouter.get("/verify/:token", handleVerify);
 
+userRouter.put("/cancelRequest", verifyJWT(['F']), cancelRequest);
+userRouter.put("/sendRequest", verifyJWT(['F']), sendRequest);
+
 userRouter.use(verifyJWT(['A']));
 
+userRouter.put("/reject", rejectRequest);
 userRouter.put("/upgrade", UpgradeUser);
 userRouter.delete("/delete", deleteUser);
 userRouter.get("/getAllUsers", getAllUsers);

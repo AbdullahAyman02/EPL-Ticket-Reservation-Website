@@ -15,7 +15,7 @@ const MatchDetails = (match_id) => {
         <div className="teams text-white flex align-middle justify-around rounded-t-md font-bold py-2">
           <div className="team-1 flex flex-col justify-center align-middle">
             <img
-              className="md:max-w-[200px]"
+              className="md:max-w-[200px] p-3"
               src={`https://media.api-sports.io/football/teams/${match.team1_id}.png`}
               alt=""
             />
@@ -24,7 +24,7 @@ const MatchDetails = (match_id) => {
           <p className="my-auto text-4xl">vs</p>
           <div className="team-2 flex flex-col justify-center align-middle">
             <img
-              className="md:max-w-[200px]"
+              className="md:max-w-[200px] p-3"
               src={`https://media.api-sports.io/football/teams/${match.team2_id}.png`}
               alt=""
             />

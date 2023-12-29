@@ -30,7 +30,7 @@ const Reservation = () => {
   }, [socket]);
   return (
     <ReserveContextProvider>
-      <div className="flex flex-wrap justify-center align-middle">
+      <div className="flex flex-wrap justify-center align-middle h-[85vh]">
         <Lounge
           match_id={match_id}
           rows={match && match.stadium.no_of_rows}

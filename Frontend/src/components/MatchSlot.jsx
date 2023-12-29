@@ -21,7 +21,8 @@ const MatchSlot = ({
   const handleClick = (path) => {
     navigate(path);
   };
-  const matchDate = new Date(date);
+  const matchDate = new Date(date); // get current date
+  // matchDate.setHours(matchDate.getHours() - 2); // adjust offset
   return (
     <div className="min-w-fit m-3 bg-black bg-opacity-60 rounded-xl">
       <div
@@ -45,7 +46,7 @@ const MatchSlot = ({
       >
         <div className="team-1 flex flex-col justify-center align-middle">
           <img
-            className="max-w-[100px]"
+            className="max-w-[100px] m-auto"
             src={`https://media.api-sports.io/football/teams/${team1_id}.png`}
             alt=""
           />
@@ -54,7 +55,7 @@ const MatchSlot = ({
         <p className="my-auto text-4xl">vs</p>
         <div className="team-2 flex flex-col justify-center align-middle">
           <img
-            className="max-w-[100px]"
+            className="max-w-[100px]  m-auto"
             src={`https://media.api-sports.io/football/teams/${team2_id}.png`}
             alt=""
           />
@@ -64,7 +65,7 @@ const MatchSlot = ({
       <div className="bg-blue-900 flex p-1 rounded-b-md text-sm ">
         <p className="p-1 flex-1 min-w-0">
           <FontAwesomeIcon className="px-2" icon={faCalendarDay} />
-          {matchDate.toLocaleString()}
+          {matchDate.toLocaleString("en-GB", { timeZone: "UTC", hour12: true })}
         </p>
         <p className="p-1 flex-1 min-w-0">
           <FontAwesomeIcon className="px-2" icon={faFutbol} />

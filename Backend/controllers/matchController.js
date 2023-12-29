@@ -27,9 +27,13 @@ const addMatch = async (req, res) => {
         message: "Must be 3 different referees",
       });
     }
-    // Date must be in the future
-    let today = new Date().toISOString().slice(0, 10);
-    if (date < today) {
+    // Date must be in the future by one day
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    // set time to 00:00:00
+    tomorrow.setHours(0,0,0,0);
+    if (date < tomorrow) {
       return res.status(400).json({
         status: "fail",
         message: "Date must be in the future",
@@ -126,12 +130,12 @@ const getMatchById = async (req, res) => {
             {
               model: Team,
               as: 'hometeam',
-              attributes: ['id', 'name'],
+              attributes: ['id'],
             },
             {
               model: Team,
               as: 'awayteam',
-              attributes: ['id', 'name'],
+              attributes: ['id'],
             },
             {
               model: Stadium,
@@ -156,7 +160,7 @@ const getMatchById = async (req, res) => {
           ],
           where: {
             id: id,
-          }
+          },
         });
         res.status(200).json({
         status: "success",
@@ -199,9 +203,13 @@ const editMatch = async (req, res) => {
         message: "Must be 3 different referees",
       });
     }
-    // Date must be in the future
+    // Date must be in the future by one day
     const today = new Date();
-    if (date < today) {
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    // set time to 00:00:00
+    tomorrow.setHours(0,0,0,0);
+    if (date < tomorrow) {
       return res.status(400).json({
         status: "fail",
         message: "Date must be in the future",

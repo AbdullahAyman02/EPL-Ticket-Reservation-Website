@@ -12,7 +12,7 @@ const Checkout = ({ match_id }) => {
   const [error, setError] = useState("");
   const reserve = () => {
     if (toReserve.length == 0) {
-      alert("Please select a seat");
+      setError("Please select a seat");
       return;
     }
     checkToken();
@@ -29,7 +29,6 @@ const Checkout = ({ match_id }) => {
         console.log(res);
         if (res.status === 200) {
           console.log("successfully reserved");
-          alert("Successfully reserved");
           console.log(socket.current);
           socket.current.emit("reserve", {
             username: Cookie.get("username"),
@@ -41,7 +40,7 @@ const Checkout = ({ match_id }) => {
       })
       .catch((err) => {
         console.log(err);
-        alert(err.response.data.message);
+        setError(err.response.data.message);
       });
   };
   const handleSubmit = (e) => {
@@ -64,11 +63,13 @@ const Checkout = ({ match_id }) => {
       <div className="flex flex-col items-center grow justify-center text-l">
         <h1 className="text-xl md:text-2xl lg:text-2xl font-bold">Checkout</h1>
         <div className="flex flex-col items-center">
-          <p className="text-l md:text-xl lg:text-2xl font-bold">Total: {toReserve.length}</p>
+          <p className="text-l md:text-xl lg:text-2xl font-bold">
+            Total: {toReserve.length}
+          </p>
           <div className="mt-3 w-3/12 min-w-fit">
             <form onSubmit={handleSubmit} className="pb-0">
               {error && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative max-w-xs">
                   <strong className="font-bold">Error!</strong>
                   <br />
                   <span className="block sm:inline"> {error}</span>

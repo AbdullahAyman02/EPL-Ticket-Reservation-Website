@@ -30,7 +30,6 @@ const Table = ({ data, setDataSet }) => {
     };
 
     const upgradeUser = (username) => {
-      // Implement your logic to handle the upgrade action
       checkToken();
       console.log(username);
       axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
@@ -38,7 +37,7 @@ const Table = ({ data, setDataSet }) => {
       )}`;
       axios
         .put(`${import.meta.env.VITE_BACKEND_URL}/user/upgrade`, {
-          data: { username: username },
+          username: username,
         })
         .then((res) => {
           setDataSet(data.filter((user) => user.username !== username));
@@ -49,14 +48,36 @@ const Table = ({ data, setDataSet }) => {
         });
     };
 
-    const isFan = (role) => role === 'F';
+    const rejectRequest = (username) => {
+      checkToken();
+      console.log(username);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
+        "token"
+      )}`;
+      axios
+        .put(`${import.meta.env.VITE_BACKEND_URL}/user/reject`, {
+          username: username,
+        })
+        .then((res) => {
+          setDataSet(data.filter((user) => user.username !== username));
+          window.location.reload();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
 
     const table = $(tableRef.current).DataTable({
       data: data,
       columns: [
         { title: "Username" },
         { title: "Role" },
-        { title: "Email" },
+        {
+          title: "Email",
+          render: function (data, type, row) {
+            return `<a href=mailto:${data}>${data}</a>`;
+          },
+        },
         {
           title: "Actions",
           searchable: false,
@@ -67,26 +88,39 @@ const Table = ({ data, setDataSet }) => {
         {
           data: null,
           render: function (data, type, row) {
-            const username = row[0];
-            const role = row[1];
+            const request = row[3];
+            console.log(request);
 
-            return `<button class="bg-red-600 text-white px-2 py-1 rounded-md hover:bg-red-900 mr-2">Delete</button>
-                    ${isFan(role) ? `<button class="bg-blue-600 text-white px-2 py-1 rounded-md hover:bg-blue-900">Upgrade</button>` : ''}`;
+            return `<button class="bg-yellow-600 text-white px-2 py-1 rounded-md hover:bg-yellow-900 mr-2">Delete</button>
+                    ${
+                      request
+                        ? `<button class="bg-green-600 text-white px-2 py-1 rounded-md hover:bg-green-900">Accept</button>`
+                        : ""
+                    }
+                    ${
+                      request
+                        ? `<button class="bg-red-600 text-white px-2 py-1 rounded-md hover:bg-red-900">Reject</button>`
+                        : ""
+                    }`;
           },
           targets: -1,
         },
       ],
       destroy: true,
+      bAutoWidth: false,
     });
 
     table.on("click", "button", function (e) {
       let rowData = table.row(e.target.closest("tr")).data();
       if (rowData) {
         const username = rowData[0];
+        console.log(username);
         if (e.target.textContent === "Delete") {
           deleteUser(username);
-        } else if (e.target.textContent === "Upgrade") {
+        } else if (e.target.textContent === "Accept") {
           upgradeUser(username);
+        } else {
+          rejectRequest(username);
         }
       }
     });

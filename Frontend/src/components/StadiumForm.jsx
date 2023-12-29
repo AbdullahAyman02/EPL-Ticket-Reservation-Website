@@ -1,8 +1,9 @@
 import Cookie from "js-cookie";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const StadiumForm = () => {
-  
+  const navigate = useNavigate();
   axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get("token")}`;        
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,6 +15,7 @@ const StadiumForm = () => {
       })
       .then((res) => {
         console.log(res.data);
+        navigate('/schedule');
       })
       .catch((err) => {
         console.log(err);

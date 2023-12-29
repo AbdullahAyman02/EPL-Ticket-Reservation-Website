@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import checkToken from "../scripts/checkToken";
 
 // eslint-disable-next-line react/prop-types
 const SignUpForm = ({ add }) => {
@@ -30,6 +31,11 @@ const SignUpForm = ({ add }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (e.target.cities.value === "true") {
+      setError("Please choose a city");
+      setSuccess("");
+      return;
+    }
     if (e.target.password.value !== e.target.confirm_password.value) {
       setError("Passwords don't match");
       setSuccess("");
@@ -56,8 +62,6 @@ const SignUpForm = ({ add }) => {
               "Signed Up Successfully! Check your email for the verification link"
             );
             setError("");
-          } else {
-            alert(res.data.data);
           }
         })
         .catch((err) => {
@@ -86,6 +90,32 @@ const SignUpForm = ({ add }) => {
           setSuccess("");
         });
     }
+  };
+
+  const toggleRequest = () => {
+    checkToken();
+    axios.defaults.headers.common["Authorization"] = `Bearer ${Cookies.get(
+      "token"
+    )}`;
+    axios
+      .put(`${import.meta.env.VITE_BACKEND_URL}/user/${!user.request ? 'sendRequest':'cancelRequest'}`, {
+        username: Cookies.get("username"),
+      }
+      )
+      .then((res) => {
+        setUser({ ...user, request: !user.request });
+        if(user.request)
+          setSuccess("Request cancelled successfully!");
+        else
+          setSuccess("Request sent successfully! Wait for an email to confirm your request");
+        setError("");
+        console.log(res);
+      }) 
+      .catch((err) => {
+        console.log(err);
+        setError(err.response.data.message);
+        setSuccess("");
+      });
   };
 
   useEffect(() => {
@@ -309,6 +339,21 @@ const SignUpForm = ({ add }) => {
           {add ? "Sign Up" : "Update Information"}
         </button>
       </form>
+      {!add && (
+        <button
+          type="submit"
+          onClick={toggleRequest}
+          className={`text-white mt-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center ${
+            user.request
+              ? "bg-red-700 hover:bg-red-800"
+              : "bg-green-700 hover:bg-green-800"
+          }`}
+        >
+          {user.request
+            ? "Cancel request for manager authorities"
+            : "Submit Request for manager authorities"}
+        </button>
+      )}
     </div>
   );
 };

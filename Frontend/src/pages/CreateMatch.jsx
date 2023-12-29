@@ -2,7 +2,7 @@ import MatchForm from "../components/MatchForm";
 
 function CreateMatch() {
     return (
-        <div className="flex items-center justify-center h-screen">
+        <div className="flex items-center justify-center">
             <MatchForm add={true}/>
         </div>
     );

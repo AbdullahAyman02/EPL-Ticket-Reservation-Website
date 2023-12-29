@@ -70,6 +70,7 @@ const handleSignup = async (req, res) => {
       role: 'F',
       refresh_token: null,
       is_verified: false,
+      request: false,
     }).catch((err) => {
       console.log("Error: ", err);
       return res.status(500).json({
@@ -196,7 +197,7 @@ const getUserbyUsername = async (req, res) => {
   console.log(username);
   try {
     const user = await User.findOne({
-      attributes: ['username', 'first_name', 'last_name', 'birthday', 'gender', 'city', 'address', 'email'],
+      attributes: ['username', 'first_name', 'last_name', 'birthday', 'gender', 'city', 'address', 'email', 'request'],
       where: {
         username: username,
       },
@@ -320,7 +321,8 @@ const handleRefresh = async (req, res) => {
   });
 };
 
-const SendEmail = async (req, res) => {
+//types: 0 for verification, 1 for rejectRequest, 2 for acceptRequest
+const SendEmail = async (req, res, type = 0) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -342,22 +344,63 @@ const SendEmail = async (req, res) => {
 
   const encodedToken = Buffer.from(token).toString('base64');
 
-  const mailConfigurations = {
-    // It should be a string of sender/server email
-    from: "eplmanagement03@gmail.com",
+  console.log(type);
+  let mailConfigurations;
+  if (type == 2)  //Accepted
+  {
+    mailConfigurations = {
+      // It should be a string of sender/server email
+      from: "eplmanagement03@gmail.com",
+  
+      to: req.body.email,
+  
+      // Subject of Email
+      subject: "Manager Request Accepted",
+  
+      // This would be the text of email body
+      text: `Hi! There, You have recently visited 
+            our website and submitted a request to be a manager.
+            Your request has been accepted!
+            Thanks.`,
+    };
+  }
+  else if (type == 1) //Rejected
+  {
+    mailConfigurations = {
+      // It should be a string of sender/server email
+      from: "eplmanagement03@gmail.com",
+  
+      to: req.body.email,
+  
+      // Subject of Email
+      subject: "Update on your request to be a manager",
+  
+      // This would be the text of email body
+      text: `Hi! There, You have recently visited
+             our website and submitted a request to be a manager. 
+             Your request has unfortunately been rejected!
+             Thanks.`
+    };
+  }
+  else
+  {
+    mailConfigurations = {
+      // It should be a string of sender/server email
+      from: "eplmanagement03@gmail.com",
 
-    to: req.body.email,
+      to: req.body.email,
 
-    // Subject of Email
-    subject: "Email Verification",
+      // Subject of Email
+      subject: "Email Verification",
 
-    // This would be the text of email body
-    text: `Hi! There, You have recently visited 
-          our website and entered your email.
-          Please follow the given link to verify your email
-          http://localhost:5173/verify/${encodedToken} 
-          Thanks`,
-  };
+      // This would be the text of email body
+      text: `Hi! There, You have recently visited 
+            our website and entered your email.
+            Please follow the given link to verify your email
+            http://localhost:5173/verify/${encodedToken} 
+            Thanks`,
+    };
+  }
 
   transporter.sendMail(mailConfigurations, function (error, info) {
     if (error) throw Error(error);
@@ -367,7 +410,7 @@ const SendEmail = async (req, res) => {
 };
 
 const UpgradeUser = async (req, res) => {
-  const { username } = req.body.data;
+  const { username } = req.body;
 
   try {
     const user = await User.findOne({ where: { username: username } });
@@ -378,15 +421,144 @@ const UpgradeUser = async (req, res) => {
         message: "User does not exist",
       });
     }
+    if(user.role == 'M') {
+      return res.status(404).json({
+        status: "Not Found",
+        message: "User is already a manager",
+      });
+    }
+    if(user.request == false) {
+      return res.status(404).json({
+        status: "Not Found",
+        message: "User has not requested to be a manager",
+      });
+    }
     user.role = 'M';
+    user.request = false;
     user.save();
-
+    req.body.email = user.email;
+    await SendEmail(req, res, 2);
     res.status(200).json({
       status: "success",
       message: "User successfully upgraded",
     });
   } catch (err) {
     console.log(err)
+    res.status(500).json({
+      status: "fail",
+      message: err,
+    });
+  }
+}
+
+const sendRequest = async (req, res) => {
+  const { username } = req.body;
+  if (!username) {
+    return res.status(400).json({
+      status: "Bad Request",
+      message: "Username is required",
+    });
+  }
+  try{
+    const user = await User.findOne({ where: { username: username } });
+    if(!user) {
+      return res.status(404).json({
+        status: "Not Found",
+        message: "User does not exist",
+      });
+    }
+    if(user.request == true) {
+      return res.status(404).json({
+        status: "Not Found",
+        message: "User has already requested to be a manager",
+      });
+    }
+    user.request = true;
+    user.save();
+    res.status(200).json({
+      status: "success",
+      message: "User successfully sent a request",
+    });
+  }
+  catch (err) {
+    res.status(500).json({
+      status: "fail",
+      message: err,
+    });
+  }
+}
+
+const cancelRequest = async (req, res) => {
+  const { username } = req.body;
+  if (!username) {
+    return res.status(400).json({
+      status: "Bad Request",
+      message: "Username is required",
+    });
+  }
+  try{
+    const user = await User.findOne({ where: { username: username } });
+    if(!user) {
+      return res.status(404).json({
+        status: "Not Found",
+        message: "User does not exist",
+      });
+    }
+    if(user.request == false) {
+      return res.status(404).json({
+        status: "Not Found",
+        message: "User has not requested to be a manager",
+      });
+    }
+    user.request = false;
+    user.save();
+    res.status(200).json({
+      status: "success",
+      email: user.email,
+      message: "User successfully cancelled request",
+    });
+  }
+  catch (err) {
+    res.status(500).json({
+      status: "fail",
+      message: err,
+    });
+  }
+}
+
+const rejectRequest = async (req, res) => {
+  const { username } = req.body;
+  if (!username) {
+    return res.status(400).json({
+      status: "Bad Request",
+      message: "Username is required",
+    });
+  }
+  try{
+    const user = await User.findOne({ where: { username: username } });
+    if(!user) {
+      return res.status(404).json({
+        status: "Not Found",
+        message: "User does not exist",
+      });
+    }
+    if(user.request == false) {
+      return res.status(404).json({
+        status: "Not Found",
+        message: "User has not requested to be a manager",
+      });
+    }
+    user.request = false;
+    user.save();
+    req.body.email = user.email;
+    await SendEmail(req, res, 1);
+    res.status(200).json({
+      status: "success",
+      email: user.email,
+      message: "User request rejected",
+    });
+  }
+  catch (err) {
     res.status(500).json({
       status: "fail",
       message: err,
@@ -495,7 +667,7 @@ const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll(
       {
-        attributes: ['username', 'role', 'email'],
+        attributes: ['username', 'role', 'email', 'request'],
         where: {
           role: {
             [Op.ne]: 'A'
@@ -518,4 +690,4 @@ const getAllUsers = async (req, res) => {
   }
 }
 
-export { handleSignup, handleLogin, handleLogout, getUserbyUsername, handleEdit, handleRefresh, UpgradeUser, deleteUser, handleVerify, getAllUsers };
+export { handleSignup, handleLogin, handleLogout, getUserbyUsername, handleEdit, handleRefresh, UpgradeUser, deleteUser, handleVerify, getAllUsers, cancelRequest, rejectRequest, sendRequest };

@@ -10,6 +10,7 @@ const MatchSchedule = () => {
         .get(`${import.meta.env.VITE_BACKEND_URL}/match/getMatches`)
         .then((res) => {
           if (res.status === 200) {
+            console.log(res.data.match)
             setMatches(res.data.match);
           }
         });

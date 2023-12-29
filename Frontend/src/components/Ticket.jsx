@@ -54,7 +54,7 @@ const Ticket = ({
         <p>Match Date: {matchDate.toDateString()}</p>
         <p>Stadium: {stadium}</p>
         <div className="flex justify-around">
-          <div className="flex flex-col h-full justify-between align-middle">
+          <div className="flex flex-col justify-center align-text-bottom">
             <img
               className="max-w-[100px]  m-auto"
               src={`https://media.api-sports.io/football/teams/${team1_id}.png`}

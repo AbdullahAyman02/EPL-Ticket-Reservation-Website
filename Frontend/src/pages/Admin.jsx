@@ -20,15 +20,15 @@ const Admin = () => {
           res.data.users.map((user) => {
             setDataSet((prev) => [
               ...prev,
-              [user.username, user.role, user.email],
+              [user.username, user.role, user.email, user.request],
             ]);
           });
         }
       });
   }, []);
   return (
-    <div>
-      <Table data={dataSet} setDataSet={setDataSet}/>
+    <div className="w-full overflow-auto">
+      <Table data={dataSet} setDataSet={setDataSet} />
     </div>
   );
 };

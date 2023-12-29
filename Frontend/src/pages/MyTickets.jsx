@@ -21,7 +21,6 @@ const MyTickets = () => {
       .then((res) => {
         if (res.status === 200) {
           console.log(res.data);
-          if(res.data.tickets.length === 0) alert("You have no tickets");
           setTickets(res.data.tickets);
         }
       });
@@ -45,6 +44,7 @@ const MyTickets = () => {
             setTickets={setTickets}
           />
         ))}
+      {tickets.length == 0 && <p className="text-xl m-10 text-slate-600">You have no tickets</p>}
     </div>
   );
 };

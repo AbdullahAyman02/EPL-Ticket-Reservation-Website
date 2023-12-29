@@ -105,7 +105,7 @@ const Lounge = ({ match_id, rows, columns }) => {
   };
 
   return (
-    <div id="lounge" className="py-4 px-2 md:py-8 md:px-10 grow">
+    <div id="lounge" className="py-4 px-2 md:py-8 md:px-10 grow flex justify-center">
       <div className="flex flex-col align-middle md:flex-wrap justify-center items-center">
         {arr.map((row, i) => {
           return (
@@ -119,7 +119,7 @@ const Lounge = ({ match_id, rows, columns }) => {
                 return (
                   <div
                     key={j}
-                    className="h-5 w-5 sm:h-8 sm:w-8 md:h-10 md:w-10 3xl:h-24 3xl:w-24"
+                    className="relative h-6 w-6 sm:h-8 sm:w-8 md:h-10 md:w-10 xl:h-16 xl:w-16 3xl:h-20 3xl:w-20"
                     onClick={() => {
                       if (
                         (arr[i][j] == 0 || arr[i][j] == 1) &&
@@ -138,7 +138,11 @@ const Lounge = ({ match_id, rows, columns }) => {
                           ? Selected
                           : MySeat
                       }
+                      title={`Seat ${i * columns + j}`}
                     ></img>
+                    <p className="absolute top-1/2 left-1/2 white -translate-x-1/2 -translate-y-1/2 text-xs xl:text-l">
+                      {i * columns + j}
+                    </p>
                   </div>
                 );
               })}

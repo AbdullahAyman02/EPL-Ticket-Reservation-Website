@@ -56,6 +56,11 @@ const User = db.define(
       type: Sequelize.BOOLEAN,
       allowNull: false,
     },
+    request: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    }
   },
   {
     createdAt: false,

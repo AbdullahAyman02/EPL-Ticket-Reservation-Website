@@ -6,19 +6,13 @@ function Schedule() {
   const userRole = Cookies.get("role");
 
   return (
-    <div>
+    <div className="mt-5">
       {userRole === "M" && (
-        <div className="float-right sticky mt-5 mr-5">
+        <div className="flex justify-center space-x-40 md:space-x-80">
           <Button text="Create Match" link="/match/create" />
-        </div>
-      )}
-
-      {userRole === "M" && (
-        <div className="float-left sticky mt-5 ml-5">
           <Button text="Create Stadium" link="/stadium/create" />
         </div>
       )}
-
       <MatchSchedule />
     </div>
   );
