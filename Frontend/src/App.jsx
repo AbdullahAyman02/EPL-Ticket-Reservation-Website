@@ -24,29 +24,31 @@ function App() {
     <AuthContextProvider>
       <BrowserRouter>
         <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/schedule" element={<Schedule />} />
-          <Route path="/matchDetails" element={<MatchDetails />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route
-            path="/reservation/:match_id"
-            element={
-              <SocketContextProvider>
-                <Reservation />
-              </SocketContextProvider>
-            }
-          />
-          <Route path="/verify/:token" element={<EmailVerification />} />
-          <Route path="/match/create" element={<CreateMatch />} />
-          <Route path="/mytickets" element={<MyTickets />} />
-          <Route path="/match/update/:match_id" element={<EditMatch />} />
-          <Route path="/stadium/create" element={<CreateStadium />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <div id="hero">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/matchDetails" element={<MatchDetails />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route
+              path="/reservation/:match_id"
+              element={
+                <SocketContextProvider>
+                  <Reservation />
+                </SocketContextProvider>
+              }
+            />
+            <Route path="/verify/:token" element={<EmailVerification />} />
+            <Route path="/match/create" element={<CreateMatch />} />
+            <Route path="/mytickets" element={<MyTickets />} />
+            <Route path="/match/update/:match_id" element={<EditMatch />} />
+            <Route path="/stadium/create" element={<CreateStadium />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
       </BrowserRouter>
     </AuthContextProvider>
   );

@@ -100,19 +100,24 @@ const SignUpForm = ({ add }) => {
       "token"
     )}`;
     axios
-      .put(`${import.meta.env.VITE_BACKEND_URL}/user/${!user.request ? 'sendRequest':'cancelRequest'}`, {
-        username: Cookies.get("username"),
-      }
+      .put(
+        `${import.meta.env.VITE_BACKEND_URL}/user/${
+          !user.request ? "sendRequest" : "cancelRequest"
+        }`,
+        {
+          username: Cookies.get("username"),
+        }
       )
       .then((res) => {
         setUser({ ...user, request: !user.request });
-        if(user.request)
-          setSuccess("Request cancelled successfully!");
+        if (user.request) setSuccess("Request cancelled successfully!");
         else
-          setSuccess("Request sent successfully! Wait for an email to confirm your request");
+          setSuccess(
+            "Request sent successfully! Wait for an email to confirm your request"
+          );
         setError("");
         console.log(res);
-      }) 
+      })
       .catch((err) => {
         console.log(err);
         setError(err.response.data.message);
@@ -335,46 +340,46 @@ const SignUpForm = ({ add }) => {
           </div>
         )}
         {add && (
-        <div>
-          <label className="relative text-sm text-gray-500 peer-focus:text-blue-600">
-            User Type
-          </label>
-          <div className="mt-1 flex justify-around">
-            <div className="flex">
-              <input
-                id="role"
-                type="radio"
-                value="F"
-                name="role"
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 peer"
-                defaultChecked
-                onChange={() => setUser({ ...user, role: "F" })}
-              />
-              <label
-                htmlFor="fan"
-                className="ms-2 text-sm font-medium text-gray-900 peer-focus:text-blue-600"
-              >
-                Fan
-              </label>
-            </div>
-            <div className="flex">
-              <input
-                id="role"
-                type="radio"
-                value="M"
-                name="role"
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 peer"
-                onChange={() => setUser({ ...user, role: "M" })}
-              />
-              <label
-                htmlFor="manager"
-                className="ms-2 text-sm font-medium text-gray-900 peer-focus:text-blue-600"
-              >
-                Manager
-              </label>
+          <div>
+            <label className="relative text-sm text-gray-500 peer-focus:text-blue-600">
+              User Type
+            </label>
+            <div className="mt-1 flex justify-around">
+              <div className="flex">
+                <input
+                  id="role"
+                  type="radio"
+                  value="F"
+                  name="role"
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 peer"
+                  defaultChecked
+                  onChange={() => setUser({ ...user, role: "F" })}
+                />
+                <label
+                  htmlFor="fan"
+                  className="ms-2 text-sm font-medium text-gray-900 peer-focus:text-blue-600"
+                >
+                  Fan
+                </label>
+              </div>
+              <div className="flex">
+                <input
+                  id="role"
+                  type="radio"
+                  value="M"
+                  name="role"
+                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 peer"
+                  onChange={() => setUser({ ...user, role: "M" })}
+                />
+                <label
+                  htmlFor="manager"
+                  className="ms-2 text-sm font-medium text-gray-900 peer-focus:text-blue-600"
+                >
+                  Manager
+                </label>
+              </div>
             </div>
           </div>
-        </div>
         )}
         <button
           type="submit"

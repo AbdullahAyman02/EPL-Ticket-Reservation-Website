@@ -75,18 +75,46 @@ const addMatch = async (req, res) => {
 
     const same_match = await Match.findOne({
         where: {
-            stadium_id: stadium_id,
-            date: {
-                [Op.between]: [startOfDay, endOfDay]
-            }
+          date: {
+            [Op.between]: [startOfDay, endOfDay]
+          },
+          [Op.or]: [
+            { stadium_id: stadium_id },
+            { home_team_id: home_team },
+            { away_team_id: home_team },
+            { home_team_id: away_team },
+            { away_team_id: away_team },
+            { referee_id: referee_id },
+            { referee_id: linesman_1 },
+            { referee_id: linesman_2 },
+            { linesman_1: referee_id },
+            { linesman_1: linesman_1 },
+            { linesman_1: linesman_2 },
+            { linesman_2: referee_id },
+            { linesman_2: linesman_1 },
+            { linesman_2: linesman_2 }
+          ]
         }
     });
-    console.log(same_match)
+
+    console.log("Same match ",same_match)
     if (same_match) {
-      return res.status(400).json({
-        status: "fail",
-        message: "Stadium is occupied by another match in the same day",
-      });
+      if ([home_team, away_team].some(element => [same_match.home_team, same_match.away_team].includes(parseInt(element, 10)))) {
+        return res.status(400).json({
+          status: "fail",
+          message: "One of the teams is playing on the same day",
+        });
+      } else if([linesman_1, linesman_2, referee_id].some(element => [same_match.referee_id, same_match.linesman_1, same_match.linesman_2].includes(parseInt(element, 10)))){
+        return res.status(400).json({
+          status: "fail",
+          message: "One of the referees is occupied by another match in the same day",
+        });
+      } else {
+        return res.status(400).json({
+          status: "fail",
+          message: "Stadium is occupied by another match in the same day",
+        });
+      } 
     }
 
     let match = await Match.create({
@@ -254,7 +282,7 @@ const editMatch = async (req, res) => {
     }
     // Date must be in the future by one day
     const today = new Date();
-    const tomorrow = new Date(today);
+    let tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
     // set time to 00:00:00
     tomorrow.setUTCHours(0,0,0,0);
@@ -320,20 +348,48 @@ const editMatch = async (req, res) => {
     console.log(date)
 
     const same_match = await Match.findOne({
-        where: {
-            stadium_id: stadium_id,
-            date: {
-                [Op.between]: [startOfDay, endOfDay]
-            },
-            [Op.not]: [{id: id}]
+      where: {
+        date: {
+          [Op.between]: [startOfDay, endOfDay]
+        },
+        [Op.or]: [
+          { stadium_id: stadium_id },
+          { home_team: home_team },
+          { away_team: home_team },
+          { home_team: away_team },
+          { away_team: away_team },
+          { referee_id: referee_id },
+          { referee_id: linesman_1 },
+          { referee_id: linesman_2 },
+          { linesman_1: referee_id },
+          { linesman_1: linesman_1 },
+          { linesman_1: linesman_2 },
+          { linesman_2: referee_id },
+          { linesman_2: linesman_1 },
+          { linesman_2: linesman_2 }
+        ],
+        id: {
+          [Op.ne]: id
         }
+      }
     });
-    console.log(same_match)
     if (same_match) {
-      return res.status(400).json({
-        status: "fail",
-        message: "Stadium is occupied by another match in the same day",
-      });
+      if ([home_team, away_team].some(element => [same_match.home_team, same_match.away_team].includes(parseInt(element, 10)))) {
+        return res.status(400).json({
+          status: "fail",
+          message: "One of the teams is playing on the same day",
+        });
+      } else if([linesman_1, linesman_2, referee_id].some(element => [same_match.referee_id, same_match.linesman_1, same_match.linesman_2].includes(parseInt(element, 10)))){
+        return res.status(400).json({
+          status: "fail",
+          message: "One of the referees is occupied by another match in the same day",
+        });
+      } else {
+        return res.status(400).json({
+          status: "fail",
+          message: "Stadium is occupied by another match in the same day",
+        });
+      } 
     }
     
     let match = await Match.update({
@@ -349,11 +405,13 @@ const editMatch = async (req, res) => {
         id: id,
       }
     });
+
     res.status(200).json({
         status: "success",
         match: match,
     });
   } catch (err) {
+    console.log(err);
     res.status(500).json({
       status: "fail",
       message: err,

@@ -109,12 +109,11 @@ button:focus-visible {
   scrollbar-width: none; /* Firefox */
 }
 
-#hero {
-  background-image: url("./assets/Hero-3.jpg");
-  background-size: auto 100%;
+/* #root {
+  background-image: url("./assets/Panorma_Cairo_Stadium.jpg");
+  background-size: 100vw 100vh;
   background-repeat: no-repeat;
-  background-position: center;
-}
+} */
 
 .dataTables_filter input,
 select {
