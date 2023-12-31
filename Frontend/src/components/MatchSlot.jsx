@@ -65,7 +65,7 @@ const MatchSlot = ({
       <div className="bg-blue-900 flex p-1 rounded-b-md text-sm ">
         <p className="p-1 flex-1 min-w-0">
           <FontAwesomeIcon className="px-2" icon={faCalendarDay} />
-          {matchDate.toLocaleString("en-GB", { timeZone: "UTC", hour12: true })}
+          {matchDate.toLocaleString()}
         </p>
         <p className="p-1 flex-1 min-w-0">
           <FontAwesomeIcon className="px-2" icon={faFutbol} />

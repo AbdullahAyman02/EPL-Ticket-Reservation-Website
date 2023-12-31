@@ -8,8 +8,17 @@ const db = new Sequelize(process.env.DB_URL, {
         ssl: {
             require: true,
             rejectUnauthorized: false
-        }
+        },
+        useUTC: false,
+        dateStrings: true,  
+        typeCast: function (field, next) {  
+            if (field.type === 'DATETIME') {  
+                return field.string()  
+            }  
+            return next()  
+        },
     },
+    timezone: '+02:00',
 });
 
 export default db;

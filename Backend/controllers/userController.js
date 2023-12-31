@@ -31,8 +31,6 @@ const handleSignup = async (req, res) => {
       });
     }
 
-    console.log(1);
-
     // Birthday must be in the past
     if (new Date(birthday) > new Date()) {
       return res.status(400).json({
@@ -40,8 +38,6 @@ const handleSignup = async (req, res) => {
         message: "Birthday must be in the past",
       });
     }
-
-    console.log(2);
 
     // Check if username already exists
     const is_exist = await User.findOne({ where: { username: username } });
@@ -51,8 +47,6 @@ const handleSignup = async (req, res) => {
         message: "Username already exists",
       });
     }
-
-    console.log(1);
 
     //Encrypt the password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -71,24 +65,18 @@ const handleSignup = async (req, res) => {
       refresh_token: null,
       is_verified: false,
       request: false,
-    }).catch((err) => {
-      console.log("Error: ", err);
-      return res.status(500).json({
-        status: "fail",
-        message: "Email already exists",
-      });
-    });
+    })
     
     await SendEmail(req, res);
-
+    
     res.status(200).json({
       status: "success",
       username: user.username,    
     });
   } catch (err) {
-    res.status(500).json({
+    res.status(409).json({
       status: "fail",
-      message: err,
+      message: err.errors[0].message,
     });
   }
 };
@@ -174,13 +162,11 @@ const handleLogin = async (req, res) => {
 const handleLogout = async (req, res) => {
   //1. Remove Refresh Token from Client
   const cookies = req.cookies;
-  // console.log(cookies);
   if (!cookies?.jwt) return res.sendStatus(204); //No content already
   const refreshToken = cookies.jwt;
   const foundUser = await User.findOne({
     where: { refresh_token: refreshToken },
   });
-  // console.log(foundUser);
   res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
   if (!foundUser) {
     return res.sendStatus(204);
@@ -321,8 +307,10 @@ const handleRefresh = async (req, res) => {
   });
 };
 
-//types: 0 for verification, 1 for rejectRequest, 2 for acceptRequest
+//types: 0 for verification, 1 for rejectRequest, 2 for acceptRequest, 3 for stadium change
 const SendEmail = async (req, res, type = 0) => {
+  console.log("Sending Email");
+  console.log(req.body);
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -346,7 +334,22 @@ const SendEmail = async (req, res, type = 0) => {
 
   console.log(type);
   let mailConfigurations;
-  if (type == 2)  //Accepted
+  if(type == 3)
+  {
+    mailConfigurations = {
+      // It should be a string of sender/server email
+      from: "eplmanagement03@gmail.com",
+  
+      to: req.body.email,
+  
+      // Subject of Email
+      subject: "Stadium Changed!",
+  
+      // This would be the text of email body
+      text: req.body.text,
+    };
+  }
+  else if (type == 2)  //Accepted
   {
     mailConfigurations = {
       // It should be a string of sender/server email
@@ -675,8 +678,7 @@ const getAllUsers = async (req, res) => {
         },
       }
     );
-    // Convert users to array of objects
-    // console.log(users);
+    
     res.status(200).json({
       status: "success",
       users: users,
@@ -690,4 +692,4 @@ const getAllUsers = async (req, res) => {
   }
 }
 
-export { handleSignup, handleLogin, handleLogout, getUserbyUsername, handleEdit, handleRefresh, UpgradeUser, deleteUser, handleVerify, getAllUsers, cancelRequest, rejectRequest, sendRequest };
+export { handleSignup, handleLogin, handleLogout, getUserbyUsername, handleEdit, handleRefresh, UpgradeUser, deleteUser, handleVerify, getAllUsers, cancelRequest, rejectRequest, sendRequest, SendEmail };
