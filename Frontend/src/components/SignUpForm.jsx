@@ -53,13 +53,14 @@ const SignUpForm = ({ add }) => {
           city: e.target.cities.value,
           address: e.target.address.value,
           email: e.target.email.value,
+          role: e.target.role.value,
         })
         .then((res) => {
           if (res.status === 200) {
             Cookies.set("username", e.target.username.value);
             console.log(Cookies.get("token"));
             setSuccess(
-              "Signed Up Successfully! Check your email for the verification link"
+              "Signed Up Successfully! Please wait for your approval email to login"
             );
             setError("");
           }
@@ -79,6 +80,7 @@ const SignUpForm = ({ add }) => {
           gender: e.target.gender.value,
           city: e.target.cities.value,
           address: e.target.address.value,
+          role: Cookies.get("role"),
         })
         .then((res) => {
           setSuccess("Data Updated Successfully!");
@@ -130,7 +132,7 @@ const SignUpForm = ({ add }) => {
   }, []);
 
   return (
-    <div className="w-3/12 min-w-fit mt-10">
+    <div className="w-5/12 min-w-fit mt-28">
       <form onSubmit={handleSubmit}>
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
@@ -331,6 +333,48 @@ const SignUpForm = ({ add }) => {
               Email Address
             </label>
           </div>
+        )}
+        {add && (
+        <div>
+          <label className="relative text-sm text-gray-500 peer-focus:text-blue-600">
+            User Type
+          </label>
+          <div className="mt-1 flex justify-around">
+            <div className="flex">
+              <input
+                id="role"
+                type="radio"
+                value="F"
+                name="role"
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 peer"
+                defaultChecked
+                onChange={() => setUser({ ...user, role: "F" })}
+              />
+              <label
+                htmlFor="fan"
+                className="ms-2 text-sm font-medium text-gray-900 peer-focus:text-blue-600"
+              >
+                Fan
+              </label>
+            </div>
+            <div className="flex">
+              <input
+                id="role"
+                type="radio"
+                value="M"
+                name="role"
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 peer"
+                onChange={() => setUser({ ...user, role: "M" })}
+              />
+              <label
+                htmlFor="manager"
+                className="ms-2 text-sm font-medium text-gray-900 peer-focus:text-blue-600"
+              >
+                Manager
+              </label>
+            </div>
+          </div>
+        </div>
         )}
         <button
           type="submit"

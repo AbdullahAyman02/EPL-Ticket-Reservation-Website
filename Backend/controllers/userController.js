@@ -19,12 +19,13 @@ const handleSignup = async (req, res) => {
     city,
     address,
     email,
+    role
   } = req.body;
   
   try {
 
     // All fields are required, except address
-    if(!username || !password || !first_name || !last_name || !birthday || !gender || !city || !email) {
+    if(!username || !password || !first_name || !last_name || !birthday || !gender || !city || !email || !role) {
       return res.status(400).json({
         status: "Bad Request",
         message: "All fields except address are required",
@@ -61,14 +62,13 @@ const handleSignup = async (req, res) => {
       city,
       address,
       email,
-      role: 'F',
+      role,
       refresh_token: null,
       is_verified: false,
       request: false,
+      pending: true,
     })
-    
-    await SendEmail(req, res);
-    
+        
     res.status(200).json({
       status: "success",
       username: user.username,    
@@ -104,7 +104,7 @@ const handleLogin = async (req, res) => {
     if (!userData.is_verified) {
       return res.status(404).json({
         status: "Not Found",
-        message: "User is not verified",
+        message: userData.pending ? "User is pending approval" : "User is not verified",
       });
     }
 
@@ -215,6 +215,12 @@ const handleEdit = async (req, res) => {
 
   try {
     // All fields are required, except address
+    if(!username || !password || !first_name || !last_name || !birthday || !gender || !city) {
+      return res.status(400).json({
+        status: "Bad Request",
+        message: "All fields except address are required",
+      });
+    }
 
     // Birthday must be in the past
     if (new Date(birthday) > new Date()) {
@@ -362,8 +368,9 @@ const SendEmail = async (req, res, type = 0) => {
   
       // This would be the text of email body
       text: `Hi! There, You have recently visited 
-            our website and submitted a request to be a manager.
+            our website and submitted a request to become a manager.
             Your request has been accepted!
+            Please logout and login again to have access to manager features.
             Thanks.`,
     };
   }
@@ -376,11 +383,11 @@ const SendEmail = async (req, res, type = 0) => {
       to: req.body.email,
   
       // Subject of Email
-      subject: "Update on your request to be a manager",
+      subject: "Request Rejected",
   
       // This would be the text of email body
       text: `Hi! There, You have recently visited
-             our website and submitted a request to be a manager. 
+             our website and submitted a request. 
              Your request has unfortunately been rejected!
              Thanks.`
     };
@@ -394,11 +401,12 @@ const SendEmail = async (req, res, type = 0) => {
       to: req.body.email,
 
       // Subject of Email
-      subject: "Email Verification",
+      subject: "Approved!",
 
       // This would be the text of email body
       text: `Hi! There, You have recently visited 
             our website and entered your email.
+            Your account has been approved!
             Please follow the given link to verify your email
             http://localhost:5173/verify/${encodedToken} 
             Thanks`,
@@ -411,6 +419,41 @@ const SendEmail = async (req, res, type = 0) => {
     console.log(info);
   });
 };
+
+const ApproveUser = async (req, res) => {
+  const { username } = req.body;
+
+  try {
+    const user = await User.findOne({ where: { username: username } });
+
+    if (!user) {
+      return res.status(404).json({
+        status: "Not Found",
+        message: "User does not exist",
+      });
+    }
+    if(user.pending == false) {
+      return res.status(404).json({
+        status: "Not Found",
+        message: "User is already approved",
+      });
+    }
+    user.pending = false;
+    user.save();
+    req.body.email = user.email;
+    await SendEmail(req, res, 0);
+    res.status(200).json({
+      status: "success",
+      message: "User successfully approved",
+    });
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({
+      status: "fail",
+      message: err,
+    });
+  }
+}
 
 const UpgradeUser = async (req, res) => {
   const { username } = req.body;
@@ -545,19 +588,27 @@ const rejectRequest = async (req, res) => {
         message: "User does not exist",
       });
     }
-    if(user.request == false) {
-      return res.status(404).json({
-        status: "Not Found",
-        message: "User has not requested to be a manager",
-      });
-    }
-    user.request = false;
-    user.save();
+    let to_delete = false;
     req.body.email = user.email;
     await SendEmail(req, res, 1);
+    if(user.pending == true) {
+      user.destroy();
+      to_delete = true;
+    }
+    else
+    {
+      if(user.request == false) {
+        return res.status(404).json({
+          status: "Not Found",
+          message: "User has not requested to be a manager",
+        });
+      }
+      user.request = false;
+      user.save();
+    }
     res.status(200).json({
       status: "success",
-      email: user.email,
+      to_delete,
       message: "User request rejected",
     });
   }
@@ -581,6 +632,9 @@ const deleteUser = async (req, res) => {
         message: "User does not exist",
       });
     }
+
+    if(user.pending)
+      await SendEmail(req, res, 1);
 
     user.destroy();
 
@@ -670,7 +724,7 @@ const getAllUsers = async (req, res) => {
   try {
     const users = await User.findAll(
       {
-        attributes: ['username', 'role', 'email', 'request'],
+        attributes: ['username', 'role', 'email', 'request', 'pending'],
         where: {
           role: {
             [Op.ne]: 'A'
@@ -692,4 +746,4 @@ const getAllUsers = async (req, res) => {
   }
 }
 
-export { handleSignup, handleLogin, handleLogout, getUserbyUsername, handleEdit, handleRefresh, UpgradeUser, deleteUser, handleVerify, getAllUsers, cancelRequest, rejectRequest, sendRequest, SendEmail };
+export { handleSignup, handleLogin, handleLogout, getUserbyUsername, handleEdit, handleRefresh, UpgradeUser, deleteUser, handleVerify, getAllUsers, ApproveUser, cancelRequest, rejectRequest, sendRequest, SendEmail };

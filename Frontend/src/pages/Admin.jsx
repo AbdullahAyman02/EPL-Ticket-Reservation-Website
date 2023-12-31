@@ -20,7 +20,7 @@ const Admin = () => {
           res.data.users.map((user) => {
             setDataSet((prev) => [
               ...prev,
-              [user.username, user.role, user.email, user.request],
+              [user.username, user.role, user.email, user.request, user.pending],
             ]);
           });
         }

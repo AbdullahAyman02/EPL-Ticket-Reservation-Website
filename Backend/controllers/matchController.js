@@ -302,6 +302,7 @@ const editMatch = async (req, res) => {
           string += `The new stadium is ${newStadium.name}. \n\n`
           string += `The ticket number is the same, ${temp_ticket}. \n\n`
           string += `Your seat number is the same. But its position may have changed, check the lounge again.\n\n`
+          string += `Thank you for using our service. \n\n`
           req.body.text = string;
           console.log(req.body.text);
           await SendEmail(req, res, 3);

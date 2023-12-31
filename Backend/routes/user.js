@@ -11,6 +11,7 @@ import {
   deleteUser,
   handleVerify,
   getAllUsers,
+  ApproveUser,
   cancelRequest,
   rejectRequest,
   sendRequest,
@@ -30,6 +31,7 @@ userRouter.put("/sendRequest", verifyJWT(['F']), sendRequest);
 
 userRouter.use(verifyJWT(['A']));
 
+userRouter.put("/approve", ApproveUser);
 userRouter.put("/reject", rejectRequest);
 userRouter.put("/upgrade", UpgradeUser);
 userRouter.delete("/delete", deleteUser);

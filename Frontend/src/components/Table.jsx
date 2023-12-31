@@ -21,8 +21,7 @@ const Table = ({ data, setDataSet }) => {
           data: { username: username },
         })
         .then((res) => {
-          setDataSet(data.filter((user) => user.username !== username));
-          window.location.reload();
+          setDataSet((prev) => prev.filter((row) => row[0] !== username));
         })
         .catch((err) => {
           console.log(err);
@@ -40,13 +39,46 @@ const Table = ({ data, setDataSet }) => {
           username: username,
         })
         .then((res) => {
-          setDataSet(data.filter((user) => user.username !== username));
-          window.location.reload();
+          setDataSet((prev) => {
+            return prev.map((row) => {
+              if (row[0] === username) {
+                return [row[0], 'M', ...row.slice(2, row.length - 2), false, row[row.length - 1]];
+              }
+              return row;
+            })
+          });
         })
         .catch((err) => {
           console.log(err);
         });
     };
+
+    const approveUser = (username) => {
+      checkToken();
+      console.log(username);
+      axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
+        "token"
+      )}`;
+      axios
+        .put(`${import.meta.env.VITE_BACKEND_URL}/user/approve`, {
+          username: username,
+        })
+        .then((res) => {
+          setDataSet((prev) => {
+            return prev.map((row) => {
+              console.log(row)
+              if (row[0] === username) {
+                console.log([...row.slice(0, row.length - 1), false]);
+                return [...row.slice(0, row.length - 1), false];
+              }
+              return row;
+            })
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
 
     const rejectRequest = (username) => {
       checkToken();
@@ -59,8 +91,19 @@ const Table = ({ data, setDataSet }) => {
           username: username,
         })
         .then((res) => {
-          setDataSet(data.filter((user) => user.username !== username));
-          window.location.reload();
+          console.log(res.data.to_delete)
+          if(res.data.to_delete){
+            setDataSet((prev) => prev.filter((row) => row[0] !== username));
+          }
+          else
+            setDataSet((prev) => {
+              return prev.map((row) => {
+                if (row[0] === username) {
+                  return [...row.slice(0, row.length - 2), false, row[row.length - 1]];
+                }
+                return row;
+              })
+            });
         })
         .catch((err) => {
           console.log(err);
@@ -72,12 +115,7 @@ const Table = ({ data, setDataSet }) => {
       columns: [
         { title: "Username" },
         { title: "Role" },
-        {
-          title: "Email",
-          render: function (data, type, row) {
-            return `<a href=mailto:${data}>${data}</a>`;
-          },
-        },
+        { title: "Email" },
         {
           title: "Actions",
           searchable: false,
@@ -89,16 +127,22 @@ const Table = ({ data, setDataSet }) => {
           data: null,
           render: function (data, type, row) {
             const request = row[3];
+            const pending = row[4];
             console.log(request);
 
-            return `<button class="bg-yellow-600 text-white px-2 py-1 rounded-md hover:bg-yellow-900 mr-2">Delete</button>
-                    ${
-                      request
-                        ? `<button class="bg-green-600 text-white px-2 py-1 rounded-md hover:bg-green-900">Accept</button>`
-                        : ""
+            return `${
+                      !pending 
+                      ? `<button class="bg-yellow-600 text-white px-2 py-1 rounded-md hover:bg-yellow-900 mr-2">Delete</button>`
+                      : ""
                     }
                     ${
                       request
+                        ? `<button class="bg-green-600 text-white px-2 py-1 rounded-md hover:bg-green-900">Upgrade</button>`
+                        : pending ? `<button class="bg-gray-600 text-white px-2 py-1 rounded-md hover:bg-gray-900">Approve</button>` :
+                        ""
+                    }
+                    ${
+                      request || pending
                         ? `<button class="bg-red-600 text-white px-2 py-1 rounded-md hover:bg-red-900">Reject</button>`
                         : ""
                     }`;
@@ -117,8 +161,10 @@ const Table = ({ data, setDataSet }) => {
         console.log(username);
         if (e.target.textContent === "Delete") {
           deleteUser(username);
-        } else if (e.target.textContent === "Accept") {
+        } else if (e.target.textContent === "Upgrade") {
           upgradeUser(username);
+        } else if (e.target.textContent === "Approve") {
+          approveUser(username);
         } else {
           rejectRequest(username);
         }
