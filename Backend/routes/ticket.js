@@ -10,8 +10,8 @@ import {
 const ticketRouter = Router();
 
 ticketRouter.get("/getTicketsByMatchID/:id", verifyJWT(['M', 'F']), getTicketsByMatchID);
+ticketRouter.get("/getTicketsByUsername/:username", verifyJWT['M', 'F'], getTicketsByUsername);
 ticketRouter.use(verifyJWT(['F']));
-ticketRouter.get("/getTicketsByUsername/:username", getTicketsByUsername);
 ticketRouter.post("/addTicket", addTicket);
 ticketRouter.delete("/deleteTicket/:ticket_no", deleteTicket);
 

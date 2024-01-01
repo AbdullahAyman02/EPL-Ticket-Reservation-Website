@@ -18,11 +18,6 @@
   user-select: none;
 }
 
-html {
-  overflow: auto;
-  height: 100vh;
-}
-
 #root {
   max-width: 100vw;
   height: 100vh;
@@ -114,12 +109,12 @@ button:focus-visible {
   scrollbar-width: none; /* Firefox */
 }
 
-#hero {
+/* #hero {
   background-image: url("./assets/Panorma_Cairo_Stadium.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-}
+} */
 
 .dataTables_filter input,
 select {
