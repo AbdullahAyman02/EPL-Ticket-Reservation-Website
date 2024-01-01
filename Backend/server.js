@@ -30,12 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookies());
 const server = createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: "https://epl-ticket-reservation-website.vercel.app",
-        methods: ["GET", "POST"],
-    }, // Set CORS options directly here
-});
+const io = new Server(server);
 
 app.use("/user", userRouter); //localhost:5000/user/login
 app.use("/match", matchRouter);
