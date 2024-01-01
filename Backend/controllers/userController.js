@@ -408,7 +408,7 @@ const SendEmail = async (req, res, type = 0) => {
             our website and entered your email.
             Your account has been approved!
             Please follow the given link to verify your email
-            https://epl-back.onrender.com/verify/${encodedToken} 
+            https://epl-ticket-reservation-website.vercel.app/verify/${encodedToken} 
             Thanks`,
     };
   }
