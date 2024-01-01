@@ -75,9 +75,12 @@ const addTicket = async (req, res) => {
         }
 
         // Check if match already played
-        const match_date = match.date.toISOString().slice(0, 16);
+        console.log(match)
+        const match_date = new Date(match.date).toISOString().slice(0, 16);
         const today = new Date();
         const today_date = today.toISOString().slice(0, 16);
+        console.log(match_date);
+        console.log(today_date);
         if (match_date < today_date) {
             res.status(409).json({
                 status: "fail",
