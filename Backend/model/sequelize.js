@@ -18,7 +18,8 @@ const db = new Sequelize(process.env.DB_URL, {
             return next()  
         },
     },
-    timezone: '+02:00',
+    
+    timezone: process.env.MODE == 'dev' ? '+02:00': '+00:00',
 });
 
 export default db;
