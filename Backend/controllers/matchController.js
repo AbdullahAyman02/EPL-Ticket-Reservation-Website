@@ -295,49 +295,6 @@ const editMatch = async (req, res) => {
       });
     }
 
-    // Check if stadium is changed
-    const oldMatch = await Match.findByPk(id);
-    if (oldMatch.stadium_id !== stadium_id) {
-      console.log("Stadium changed");
-        // Check if the seat numbers in the old stadium exist in the new stadium
-        const reservedTickets = await getReservedTickets(id);
-        const reservedSeats = reservedTickets.map(ticket => ticket.seat_no);
-        const newStadium = await Stadium.findByPk(stadium_id);
-        for (let seatNo of reservedSeats) {
-          if (seatNo > newStadium.no_of_rows * newStadium.seats_per_row) {
-            return res.status(400).json({
-              status: "fail",
-              message: "The new stadium is smaller than the old stadiums, some already reserved seats do not exist in the new stadium",
-            });
-          }
-        }
-        console.log("All seats exist in the new stadium");
-        // Send email to users who bought tickets for this match
-        const users_temp = reservedTickets.map(ticket => ticket.username);
-        const users = await getEmails(users_temp);
-        for (let user of users) {
-          // Send email to user
-          req.body.email = user.email;
-          console.log(req.body.email)
-          // Change date to string
-          const temp_date = date.split(".")[0].replace("T", " ");
-          console.log(temp_date);
-          const temp_ticket = reservedTickets.find(ticket => ticket.username === user.username).ticket_no;
-          // Email content
-          let string = `Hi! There, ${user.username}! \n\n`
-          string += `The match you bought tickets for has been moved to a new stadium. \n\n`
-          string += `The match date is ${temp_date}. \n\n`
-          string += `The new stadium is ${newStadium.name}. \n\n`
-          string += `The ticket number is the same, ${temp_ticket}. \n\n`
-          string += `Your seat number is the same. But its position may have changed, check the lounge again.\n\n`
-          string += `Thank you for using our service. \n\n`
-          req.body.text = string;
-          console.log(req.body.text);
-          await SendEmail(req, res, 3);
-          console.log("Sending email to " + user);
-        }
-    }
-
     //Check if stadium is occupied by another match in the same day
     let startOfDay = new Date(date+"Z");
     startOfDay.setUTCHours(0, 0, 0, 0);
@@ -390,6 +347,49 @@ const editMatch = async (req, res) => {
           message: "Stadium is occupied by another match in the same day",
         });
       } 
+    }
+
+    // Check if stadium is changed
+    const oldMatch = await Match.findByPk(id);
+    if (oldMatch.stadium_id !== stadium_id) {
+      console.log("Stadium changed");
+        // Check if the seat numbers in the old stadium exist in the new stadium
+        const reservedTickets = await getReservedTickets(id);
+        const reservedSeats = reservedTickets.map(ticket => ticket.seat_no);
+        const newStadium = await Stadium.findByPk(stadium_id);
+        for (let seatNo of reservedSeats) {
+          if (seatNo > newStadium.no_of_rows * newStadium.seats_per_row) {
+            return res.status(400).json({
+              status: "fail",
+              message: "The new stadium is smaller than the old stadiums, some already reserved seats do not exist in the new stadium",
+            });
+          }
+        }
+        console.log("All seats exist in the new stadium");
+        // Send email to users who bought tickets for this match
+        const users_temp = reservedTickets.map(ticket => ticket.username);
+        const users = await getEmails(users_temp);
+        for (let user of users) {
+          // Send email to user
+          req.body.email = user.email;
+          console.log(req.body.email)
+          // Change date to string
+          const temp_date = date.split(".")[0].replace("T", " ");
+          console.log(temp_date);
+          const temp_ticket = reservedTickets.find(ticket => ticket.username === user.username).ticket_no;
+          // Email content
+          let string = `Hi! There, ${user.username}! \n\n`
+          string += `The match you bought tickets for has been moved to a new stadium. \n\n`
+          string += `The match date is ${temp_date}. \n\n`
+          string += `The new stadium is ${newStadium.name}. \n\n`
+          string += `The ticket number is the same, ${temp_ticket}. \n\n`
+          string += `Your seat number is the same. But its position may have changed, check the lounge again.\n\n`
+          string += `Thank you for using our service. \n\n`
+          req.body.text = string;
+          console.log(req.body.text);
+          await SendEmail(req, res, 3);
+          console.log("Sending email to " + user);
+        }
     }
     
     let match = await Match.update({
