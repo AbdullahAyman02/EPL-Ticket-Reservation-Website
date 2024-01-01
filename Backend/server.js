@@ -14,7 +14,7 @@ import { Server } from "socket.io";
 
 dotenv.config();
 var corsOptions = {
-    origin: 'https://epl-ticket-reservation-website.vercel.app',
+    origin: ['https://epl-ticket-reservation-website.vercel.app', 'http://localhost:5173'],
     optionsSuccessStatus: 200,
     credentials: true,
 }
