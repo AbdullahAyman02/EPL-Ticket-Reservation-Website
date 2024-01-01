@@ -116,6 +116,14 @@ const handleLogin = async (req, res) => {
       });
     }
 
+    if(userData.refreshToken)
+    {
+      return res.status(409).json({
+        status: "fail",
+        message: "User already logged in",
+      });
+    }
+    
     const accessToken = jwt.sign(
       {
         role: userData.role,
