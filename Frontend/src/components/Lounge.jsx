@@ -45,7 +45,7 @@ const Lounge = ({ match_id, rows, columns }) => {
   socket.current.on("cancel", (data) => {
     console.log(data);
     console.log(arr);
-    if (data.match_id === match_id) {
+    if (data.match_id == match_id) {
       setArr((prev) => {
         let newArr = [...prev];
         let row = Math.floor(data.seat_no / newArr[0].length);
