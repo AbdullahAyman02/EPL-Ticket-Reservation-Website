@@ -12,7 +12,6 @@ export const checkToken = async () => {
         if (res.status === 200) {
           Cookie.set("token", res.data.accessToken);
           console.log("Token refreshed");
-          window.location.reload();
         } else {
           Cookie.remove("token");
           window.location.href = "/login";
