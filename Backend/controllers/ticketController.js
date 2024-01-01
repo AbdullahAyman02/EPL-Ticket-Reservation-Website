@@ -4,6 +4,7 @@ import { Match } from "../model/model.js";
 import { Stadium } from "../model/model.js";
 import { Team } from "../model/model.js";
 import { Op } from "sequelize";
+import io from "../server.js";
 
 const getTicketsByMatchID = async (req, res) => {
     try {
@@ -190,11 +191,25 @@ const deleteTicket = async (req, res) => {
             return;
         }
 
+        const ticket = await Ticket.findOne({
+            where: {
+                ticket_no: req.params.ticket_no
+            }
+        });
+
+        const match_id = ticket.match_id;
+        const seat_no = ticket.seat_no;
+
         await Ticket.destroy({
             where: {
                 ticket_no: req.params.ticket_no
             }
         });
+
+        io.emit('cancel', { match_id, seat_no });
+        console.log(`emitting cancel for match ${match_id} and seat ${seat_no}`);
+        console.log("connected sockets: " + io.engine.clientsCount);
+
         res.status(200).json({
             status: "success",
             ticket: is_exist,

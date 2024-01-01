@@ -42,6 +42,21 @@ const Lounge = ({ match_id, rows, columns }) => {
     }
   });
 
+  socket.current.on("cancel", (data) => {
+    console.log(data);
+    console.log(arr);
+    if (data.match_id === match_id) {
+      setArr((prev) => {
+        let newArr = [...prev];
+        let row = Math.floor(data.seat_no / newArr[0].length);
+        let col = data.seat_no % newArr[0].length;
+        console.log(row, col);
+        newArr[row][col] = 0;
+        return newArr;
+      });
+    }
+  });
+
   const loadSeats = async () => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
       "token"
@@ -105,7 +120,10 @@ const Lounge = ({ match_id, rows, columns }) => {
   };
 
   return (
-    <div id="lounge" className="py-4 px-2 md:py-8 md:px-10 grow flex justify-center">
+    <div
+      id="lounge"
+      className="py-4 px-2 md:py-8 md:px-10 grow flex justify-center"
+    >
       <div className="flex flex-col align-middle md:flex-wrap justify-center items-center">
         {arr.map((row, i) => {
           return (
