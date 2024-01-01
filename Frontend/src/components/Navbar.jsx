@@ -87,7 +87,7 @@ const Navbar = () => {
                 Match Schedule
               </Link>
             </li>
-            {Cookies.get("role") != "A" && (
+            {(Cookies.get("role") == "F" || Cookies.get("role") == "M") && (
               <li>
                 <Link
                   to="/mytickets"
