@@ -6,7 +6,7 @@ export const SocketContext = createContext();
 // eslint-disable-next-line react/prop-types
 export const SocketContextProvider = ({ children }) => {
   let socket = useRef(null);
-  socket.current = io("http://localhost:20396", {
+  socket.current = io("https://epl-back.onrender.com", {
     transports: ["websocket"],
   });
 
