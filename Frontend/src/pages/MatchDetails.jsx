@@ -3,6 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDay, faFutbol } from "@fortawesome/free-solid-svg-icons";
 import referee from "../assets/referee.png";
 import linesman from "../assets/linesman.png";
+import Zed from "../assets/ZED.png";
+import Ittihad from "../assets/Ittihad.png";
+import Pyramids from "../assets/pyramids.png";
+import Mahalla from "../assets/Mahalla.png";
 
 const MatchDetails = (match_id) => {
   const location = useLocation();
@@ -16,7 +20,17 @@ const MatchDetails = (match_id) => {
           <div className="team-1 flex flex-col justify-center align-middle">
             <img
               className="md:max-w-[200px] p-3"
-              src={`https://media.api-sports.io/football/teams/${match.team1_id}.png`}
+              src={
+                match.team1_id > 4
+                  ? `https://media.api-sports.io/football/teams/${match.team1_id}.png`
+                  : match.team1_id == 1
+                  ? Zed
+                  : match.team1_id == 2
+                  ? Ittihad
+                  : match.team1_id == 3
+                  ? Pyramids
+                  : Mahalla
+              }
               alt=""
             />
             <h3>{match.team1}</h3>
@@ -25,7 +39,17 @@ const MatchDetails = (match_id) => {
           <div className="team-2 flex flex-col justify-center align-middle">
             <img
               className="md:max-w-[200px] p-3"
-              src={`https://media.api-sports.io/football/teams/${match.team2_id}.png`}
+              src={
+                match.team2_id > 4
+                  ? `https://media.api-sports.io/football/teams/${match.team2_id}.png`
+                  : match.team2_id == 1
+                  ? Zed
+                  : match.team2_id == 2
+                  ? Ittihad
+                  : match.team2_id == 3
+                  ? Pyramids
+                  : Mahalla
+              }
               alt=""
             />
             <h3>{match.team2}</h3>

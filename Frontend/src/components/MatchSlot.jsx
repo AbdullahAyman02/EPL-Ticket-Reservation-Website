@@ -2,6 +2,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCalendarDay, faFutbol } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import Zed from "../assets/ZED.png";
+import Ittihad from "../assets/Ittihad.png";
+import Pyramids from "../assets/pyramids.png";
+import Mahalla from "../assets/Mahalla.png";
 
 // eslint-disable-next-line react/prop-types
 const MatchSlot = ({
@@ -47,7 +51,17 @@ const MatchSlot = ({
         <div className="team-1 flex flex-col justify-center align-middle">
           <img
             className="max-w-[100px] m-auto"
-            src={`https://media.api-sports.io/football/teams/${team1_id}.png`}
+            src={
+              team1_id > 4
+                ? `https://media.api-sports.io/football/teams/${team1_id}.png`
+                : team1_id == 1
+                ? Zed
+                : team1_id == 2
+                ? Ittihad
+                : team1_id == 3
+                ? Pyramids
+                : Mahalla
+            }
             alt=""
           />
           <h3>{team1}</h3>
@@ -56,7 +70,17 @@ const MatchSlot = ({
         <div className="team-2 flex flex-col justify-center align-middle">
           <img
             className="max-w-[100px]  m-auto"
-            src={`https://media.api-sports.io/football/teams/${team2_id}.png`}
+            src={
+              team2_id > 4
+                ? `https://media.api-sports.io/football/teams/${team2_id}.png`
+                : team2_id == 1
+                ? Zed
+                : team2_id == 2
+                ? Ittihad
+                : team2_id == 3
+                ? Pyramids
+                : Mahalla
+            }
             alt=""
           />
           <h3>{team2}</h3>

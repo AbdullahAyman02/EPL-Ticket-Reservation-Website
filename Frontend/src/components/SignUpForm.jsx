@@ -228,7 +228,7 @@ const SignUpForm = ({ add }) => {
             />
             <label
               htmlFor="lastName"
-              className="absolute right-20 text-sm text-gray-500 duration-300 peer-focus:text-blue-600 peer-placeholder-shown:translate-y-2 -translate-y-6 top-1 peer-focus:-translate-y-6"
+              className="absolute block px-2 text-sm text-gray-500 duration-300 peer-focus:text-blue-600 peer-placeholder-shown:translate-y-2 -translate-y-6 top-1 peer-focus:-translate-y-6"
             >
               Last Name
             </label>

@@ -3,6 +3,10 @@ import Cookie from "js-cookie";
 import { checkToken } from "../scripts/checkToken";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Zed from "../assets/ZED.png";
+import Ittihad from "../assets/Ittihad.png";
+import Pyramids from "../assets/pyramids.png";
+import Mahalla from "../assets/Mahalla.png";
 
 const MatchForm = ({ add }) => {
   const [teams, setTeams] = useState([]);
@@ -159,14 +163,34 @@ const MatchForm = ({ add }) => {
         {match.hometeam && (
           <img
             className="max-w-[100px] m-auto"
-            src={`https://media.api-sports.io/football/teams/${match.hometeam.id}.png`}
+            src={
+              match.hometeam.id > 4
+                ? `https://media.api-sports.io/football/teams/${match.hometeam.id}.png`
+                : match.hometeam.id == 1
+                ? Zed
+                : match.hometeam.id == 2
+                ? Ittihad
+                : match.hometeam.id == 3
+                ? Pyramids
+                : Mahalla
+            }
             alt=""
           />
         )}
         {match.awayteam && (
           <img
             className="max-w-[100px] m-auto"
-            src={`https://media.api-sports.io/football/teams/${match.awayteam.id}.png`}
+            src={
+              match.awayteam.id > 4
+                ? `https://media.api-sports.io/football/teams/${match.awayteam.id}.png`
+                : match.awayteam.id == 1
+                ? Zed
+                : match.awayteam.id == 2
+                ? Ittihad
+                : match.awayteam.id == 3
+                ? Pyramids
+                : Mahalla
+            }
             alt=""
           />
         )}

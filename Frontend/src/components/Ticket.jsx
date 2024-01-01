@@ -3,6 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import Cookie from "js-cookie";
 import checkToken from "../scripts/checkToken";
+import Pyramids from "../assets/pyramids.png";
+import Zed from "../assets/ZED.png";
+import Ittihad from "../assets/Ittihad.png";
+import Mahalla from "../assets/Mahalla.png";
 
 const Ticket = ({
   ticket_no,
@@ -57,7 +61,17 @@ const Ticket = ({
           <div className="flex flex-col justify-center align-text-bottom">
             <img
               className="max-w-[100px]  m-auto"
-              src={`https://media.api-sports.io/football/teams/${team1_id}.png`}
+              src={
+                team1_id > 4
+                  ? `https://media.api-sports.io/football/teams/${team1_id}.png`
+                  : team1_id == 1
+                  ? Zed
+                  : team1_id == 2
+                  ? Ittihad
+                  : team1_id == 3
+                  ? Pyramids
+                  : Mahalla
+              }
               alt=""
             />
             <h3>{team1}</h3>
@@ -66,7 +80,17 @@ const Ticket = ({
           <div className="flex flex-col justify-center align-text-bottom">
             <img
               className="max-w-[100px] m-auto"
-              src={`https://media.api-sports.io/football/teams/${team2_id}.png`}
+              src={
+                team2_id > 4
+                  ? `https://media.api-sports.io/football/teams/${team2_id}.png`
+                  : team2_id == 1
+                  ? Zed
+                  : team2_id == 2
+                  ? Ittihad
+                  : team2_id == 3
+                  ? Pyramids
+                  : Mahalla
+              }
               alt=""
             />
             <h3>{team2}</h3>
