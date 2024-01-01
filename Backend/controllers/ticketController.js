@@ -123,28 +123,29 @@ const addTicket = async (req, res) => {
             });
         }
 
-        
-        // Generate ticket numbers for each seat_no
-        const formattedMatchId = match_id.toString() + "00";
-        const tickets = seat_no.map(async (seat_no) => {
-            const formattedSeatNumber = seat_no.toString() + "00";
-            const ticket_no = parseInt(`${formattedMatchId}${formattedSeatNumber}`);
-            
+        for(let i = 0; i < seat_no.length; i++) {
             // Check that the ticket is not already bought
             const is_exist = await Ticket.findOne({
                 where: {
                     match_id: match_id,
-                    seat_no: seat_no,
-                    ticket_no: ticket_no,
+                    seat_no: seat_no[i],
                 }
             });
     
             if (is_exist) {
-                res.status(409).json({
+                return res.status(409).json({
                     status: "fail",
                     message: "Ticket(s) already bought",
                 });
             }
+        }
+
+        // Generate ticket numbers for each seat_no
+        const formattedMatchId = match_id.toString() + "00";
+        const tickets = seat_no.map((seat_no) => {
+            const formattedSeatNumber = seat_no.toString() + "00";
+            const ticket_no = parseInt(`${formattedMatchId}${formattedSeatNumber}`);
+            
             return {
                 ticket_no,
                 match_id,
@@ -154,6 +155,7 @@ const addTicket = async (req, res) => {
         });
 
         if(res.statusCode === 409) return;
+        console.log(tickets);
 
         // Create all tickets in a single transaction
         await Ticket.bulkCreate(tickets);
