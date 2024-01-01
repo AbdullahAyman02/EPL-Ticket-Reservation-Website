@@ -24,6 +24,30 @@ const addStadium = async (req, res) => {
     } = req.body;
     
     try{
+        // Check if all fields are empty
+        if(!name || !no_of_rows || !seats_per_row){
+            res.status(400).json({
+                status: "fail",
+                message: "Please fill all fields",
+            });
+            return;
+        }
+
+        // Check if stadium already exists
+        const stadiumExists = await Stadium.findOne({
+            where: {
+                name: name
+            }
+        });
+
+        if (stadiumExists) {
+            res.status(400).json({
+                status: "fail",
+                message: "Stadium already exists",
+            });
+            return;
+        }
+
         let stadium = await Stadium.create({
             name,
             no_of_rows,

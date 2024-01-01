@@ -214,11 +214,11 @@ const handleEdit = async (req, res) => {
   } = req.body;
 
   try {
-    // All fields are required, except address
-    if(!username || !password || !first_name || !last_name || !birthday || !gender || !city) {
+    // All fields are required, except address and password
+    if(!username || !first_name || !last_name || !birthday || !gender || !city) {
       return res.status(400).json({
         status: "Bad Request",
-        message: "All fields except address are required",
+        message: "All fields except address and password are required",
       });
     }
 
