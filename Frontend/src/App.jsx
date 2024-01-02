@@ -19,10 +19,17 @@ import Admin from "./pages/Admin";
 import MatchDetails from "./pages/MatchDetails.jsx";
 import { SocketContextProvider } from "./contexts/SocketContext";
 import spinner from "./assets/spinner.png";
+import checkToken from "./scripts/checkToken.js";
+import Cookies from "js-cookie";
 
 function App() {
   const [isLoading, setIsLoading] = useState(false);
-  axios.interceptors.request.use((config) => {
+  axios.interceptors.request.use(async (config) => {
+    console.log(config.url);
+    if (config.url != `${import.meta.env.VITE_BACKEND_URL}/user/refresh`) {
+      await checkToken();
+      // config.headers["Authorization"] = `Bearer ${Cookies.get("token")}`;
+    }
     setIsLoading(true);
     return config;
   });

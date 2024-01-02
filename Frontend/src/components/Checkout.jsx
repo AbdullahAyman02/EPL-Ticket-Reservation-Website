@@ -1,6 +1,5 @@
 import { ReserveContext } from "../contexts/ReserveContext";
 import { SocketContext } from "../contexts/SocketContext";
-import { checkToken } from "../scripts/checkToken";
 import { useContext, useState } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
@@ -15,7 +14,6 @@ const Checkout = ({ match_id }) => {
       setError("Please select a seat");
       return;
     }
-    checkToken();
     axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
       "token"
     )}`;

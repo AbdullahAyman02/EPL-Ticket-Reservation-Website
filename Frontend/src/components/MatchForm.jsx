@@ -1,6 +1,5 @@
 import axios from "axios";
 import Cookie from "js-cookie";
-import { checkToken } from "../scripts/checkToken";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Zed from "../assets/ZED.png";
@@ -18,7 +17,6 @@ const MatchForm = ({ add }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    checkToken();
     if (!add) {
       axios
         .get(
@@ -72,7 +70,6 @@ const MatchForm = ({ add }) => {
       setSuccess("");
       return;
     }
-    checkToken();
     if (add) {
       axios
         .post(`${import.meta.env.VITE_BACKEND_URL}/match/addMatch`, {
@@ -121,7 +118,6 @@ const MatchForm = ({ add }) => {
   };
 
   useEffect(() => {
-    checkToken();
     axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/team/getTeams`)
       .then((res) => {
@@ -134,7 +130,6 @@ const MatchForm = ({ add }) => {
   }, []);
 
   useEffect(() => {
-    checkToken();
     axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/stadium/getStadiums`)
       .then((res) => {
@@ -146,7 +141,6 @@ const MatchForm = ({ add }) => {
   }, []);
 
   useEffect(() => {
-    checkToken();
     axios
       .get(`${import.meta.env.VITE_BACKEND_URL}/referee/getReferees`)
       .then((res) => {

@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import DataTable from "datatables.net-dt";
-import checkToken from "../scripts/checkToken.js";
 import Cookie from "js-cookie";
 import axios from "axios";
 import $ from "jquery";
@@ -11,7 +10,6 @@ const Table = ({ data, setDataSet }) => {
 
   useEffect(() => {
     const deleteUser = (username) => {
-      checkToken();
       console.log(username);
       axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
         "token"
@@ -29,7 +27,6 @@ const Table = ({ data, setDataSet }) => {
     };
 
     const upgradeUser = (username) => {
-      checkToken();
       console.log(username);
       axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
         "token"
@@ -54,7 +51,6 @@ const Table = ({ data, setDataSet }) => {
     };
 
     const approveUser = (username) => {
-      checkToken();
       console.log(username);
       axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
         "token"
@@ -81,7 +77,6 @@ const Table = ({ data, setDataSet }) => {
     }
 
     const rejectRequest = (username) => {
-      checkToken();
       console.log(username);
       axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
         "token"

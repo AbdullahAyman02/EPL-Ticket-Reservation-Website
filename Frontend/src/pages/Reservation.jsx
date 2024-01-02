@@ -23,7 +23,6 @@ const Reservation = () => {
   useEffect(() => {
     getMatch();
     socket.current.connect();
-    console.log(socket.current);
     socket.current.on("connect", () => {
       console.log(`Connected to server as: ${socket.current.id}`);
     });

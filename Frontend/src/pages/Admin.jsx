@@ -2,12 +2,10 @@ import Table from "../components/Table";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Cookie from "js-cookie";
-import checkToken from "../scripts/checkToken";
 
 const Admin = () => {
   const [dataSet, setDataSet] = useState([]);
   useEffect(() => {
-    checkToken();
     axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
       "token"
     )}`;

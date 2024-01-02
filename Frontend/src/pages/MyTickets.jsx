@@ -2,13 +2,11 @@ import Ticket from "../components/Ticket";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
-import checkToken from "../scripts/checkToken";
 
 const MyTickets = () => {
   const [tickets, setTickets] = useState([]);
   useEffect(() => {
     const username = Cookie.get("username");
-    checkToken();
     axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
       "token"
     )}`;

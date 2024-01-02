@@ -45,7 +45,7 @@ html {
 .sticky-navbar {
   position: sticky;
   top: 0;
-  z-index: 100; 
+  z-index: 100;
 }
 
 a {
@@ -123,13 +123,13 @@ button:focus-visible {
   scrollbar-width: none; /* Firefox */
 }
 
-#hero {
+/* #hero {
   min-height: 90vh;
   background-image: url("./assets/Panorma_Cairo_Stadium.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-}
+} */
 
 .dataTables_filter input,
 select {
@@ -159,7 +159,7 @@ form {
 }
 
 .fadeIn {
-  animation: fadeIn 1s ease-out forwards;
+  animation: fadeIn 0.8s ease-out forwards;
 }
 
 .loader .spinner {
@@ -177,7 +177,7 @@ form {
 }
 
 .fadeOut {
-  animation: fadeOut 1s ease-out forwards;
+  animation: fadeOut 0.8s ease-out forwards;
 }
 
 @keyframes fadeOut {

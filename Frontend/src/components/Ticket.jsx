@@ -2,7 +2,6 @@ import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import Cookie from "js-cookie";
-import checkToken from "../scripts/checkToken";
 import Pyramids from "../assets/pyramids.png";
 import Zed from "../assets/ZED.png";
 import Ittihad from "../assets/Ittihad.png";
@@ -21,7 +20,6 @@ const Ticket = ({
   setTickets,
 }) => {
   const handleClick = () => {
-    checkToken();
     axios.defaults.headers.common["Authorization"] = `Bearer ${Cookie.get(
       "token"
     )}`;

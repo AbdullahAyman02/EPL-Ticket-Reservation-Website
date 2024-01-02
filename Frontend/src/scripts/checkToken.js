@@ -4,6 +4,10 @@ import axios from "axios";
 
 export const checkToken = async () => {
   const token = Cookie.get("token");
+  if (!token) {
+    return;
+  }
+  console.log(jwtDecode(token).exp - Date.now() / 1000);
   if (jwtDecode(token).exp < Date.now() / 1000) {
     axios.defaults.withCredentials = true;
     const response = await axios

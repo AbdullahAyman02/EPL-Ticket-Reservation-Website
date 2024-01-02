@@ -1,7 +1,6 @@
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import checkToken from "../scripts/checkToken";
 
 // eslint-disable-next-line react/prop-types
 const SignUpForm = ({ add }) => {
@@ -95,7 +94,6 @@ const SignUpForm = ({ add }) => {
   };
 
   const toggleRequest = () => {
-    checkToken();
     axios.defaults.headers.common["Authorization"] = `Bearer ${Cookies.get(
       "token"
     )}`;

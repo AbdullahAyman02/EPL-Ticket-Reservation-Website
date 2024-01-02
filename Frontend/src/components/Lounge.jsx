@@ -5,7 +5,6 @@ import ReservedSeat from "../assets/reserved.png";
 import axios from "axios";
 import Cookie from "js-cookie";
 import { useEffect, useState, useContext } from "react";
-import { checkToken } from "../scripts/checkToken";
 import { ReserveContext } from "../contexts/ReserveContext";
 import { SocketContext } from "../contexts/SocketContext";
 
@@ -95,7 +94,6 @@ const Lounge = ({ match_id, rows, columns }) => {
   };
 
   useEffect(() => {
-    checkToken();
     loadSeats();
   }, [rows, columns]);
 
