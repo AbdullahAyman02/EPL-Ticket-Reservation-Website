@@ -28,7 +28,7 @@ function App() {
     console.log(config.url);
     if (config.url != `${import.meta.env.VITE_BACKEND_URL}/user/refresh`) {
       await checkToken();
-      // config.headers["Authorization"] = `Bearer ${Cookies.get("token")}`;
+      config.headers["Authorization"] = `Bearer ${Cookies.get("token")}`;
     }
     setIsLoading(true);
     return config;
