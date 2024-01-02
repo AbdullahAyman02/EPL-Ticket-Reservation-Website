@@ -11,8 +11,8 @@ const ticketRouter = Router();
 
 ticketRouter.get("/getTicketsByMatchID/:id", verifyJWT(['M', 'F']), getTicketsByMatchID);
 ticketRouter.get("/getTicketsByUsername/:username", verifyJWT(['M', 'F']), getTicketsByUsername);
+ticketRouter.delete("/deleteTicket/:ticket_no", verifyJWT(['M', 'F']), deleteTicket);
 ticketRouter.use(verifyJWT(['F']));
 ticketRouter.post("/addTicket", addTicket);
-ticketRouter.delete("/deleteTicket/:ticket_no", deleteTicket);
 
 export default ticketRouter;

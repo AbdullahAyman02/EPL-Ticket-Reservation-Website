@@ -38,7 +38,7 @@ const Navbar = () => {
   }, [isLoggedIn]);
 
   return (
-    <nav id="navbar" className="z-10 top-0 w-full bg-[#360137] bg-opacity-50">
+    <nav id="navbar" className="z-10 top-0 w-full bg-[#360137] bg-opacity-50 sticky-navbar">
       <Link to="/" className="flex items-center px-2">
         <img
           src={Logo}
