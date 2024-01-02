@@ -143,6 +143,10 @@ form {
   animation: fadeIn 0.5s ease-out forwards;
 }
 
+.fadeIn {
+  animation: fadeIn 1s ease-out forwards;
+}
+
 .loader .spinner {
   width: 10em;
   animation: spin 2s linear infinite;
@@ -158,7 +162,7 @@ form {
 }
 
 .fadeOut {
-  animation: fadeOut 0.5s ease-out forwards;
+  animation: fadeOut 1s ease-out forwards;
 }
 
 @keyframes fadeOut {
