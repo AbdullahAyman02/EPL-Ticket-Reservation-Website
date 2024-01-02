@@ -351,7 +351,7 @@ const editMatch = async (req, res) => {
 
     // Check if stadium is changed
     const oldMatch = await Match.findByPk(id);
-    if (oldMatch.stadium_id !== stadium_id) {
+    if (oldMatch.stadium_id != stadium_id) {
       console.log("Stadium changed");
         // Check if the seat numbers in the old stadium exist in the new stadium
         const reservedTickets = await getReservedTickets(id);
@@ -382,8 +382,8 @@ const editMatch = async (req, res) => {
           string += `The match you bought tickets for has been moved to a new stadium. \n\n`
           string += `The match date is ${temp_date}. \n\n`
           string += `The new stadium is ${newStadium.name}. \n\n`
-          string += `The ticket number is the same, ${temp_ticket}. \n\n`
-          string += `Your seat number is the same. But its position may have changed, check the lounge again.\n\n`
+          // string += `The ticket number is the same, ${temp_ticket}. \n\n`
+          string += `Your seat number(s) is the same. But its position may have changed, check the lounge again.\n\n`
           string += `Thank you for using our service. \n\n`
           req.body.text = string;
           console.log(req.body.text);
