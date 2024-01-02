@@ -45,7 +45,7 @@ function App() {
       <AuthContextProvider>
         <BrowserRouter>
           <Navbar />
-          <div id="hero">
+          <div id="hero" className={`${isLoading ? "fadeOut" : "fadeIn"}`}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/signup" element={<SignUp />} />
