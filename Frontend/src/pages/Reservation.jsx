@@ -24,7 +24,10 @@ const Reservation = () => {
     getMatch();
     socket.current.connect();
     socket.current.on("connect", () => {
-      console.log(`Connected to server as: ${socket.current.id}`);
+      setTimeout(() => {
+        console.log(socket.current);
+        console.log(`Connected to server as: ${socket.current.id}`);
+      }, 2000);
     });
   }, [socket]);
   return (
